@@ -1,5 +1,52 @@
 /* journal-details.component.scss */
 
+.container{
+  height: 100vh;
+
+  .logo {
+    text-align: center;
+    margin: 40px 20px;
+    a {
+      text-decoration: none;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  mat-sidenav{
+    width: 15%;
+    .navigation{
+      padding: 0;
+      list-style-type: none;
+      li{
+        text-align: center;
+        padding: 20px 0;
+        cursor: pointer;
+        width: 100%;
+    
+        &:hover {
+          background-color: rgba(0,0,20,0.5);
+        }
+        
+        a{
+          text-decoration: none;
+          color: rgb(255, 255, 255);
+          font-size: 1.5rem;
+          font-weight: 300;
+        }
+        
+      }
+
+    }
+    }
+
+mat-nav-list{
+  text-align: center;
+}
+}
+
+
 .journal-details {
   max-width: 800px;
   margin: 20px auto;

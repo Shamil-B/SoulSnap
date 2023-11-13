@@ -1,14 +1,35 @@
 <!-- collection-form.component.html -->
-<app-navbar></app-navbar>
-<div class="collection-form">
-    <h2>{{ isEditing ? 'Edit Collection' : 'Create New Collection' }}</h2>
-    <form (ngSubmit)="onSubmit()">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" [(ngModel)]="collection.name" required>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened="true">
+        <div class=" logo">
+            <!-- Your logo or app name goes here -->
+            <a routerLink="/collections">SoulSnap</a>
+        </div>
+        <ul class="navigation">
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Collections</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="collection-form">
+            <h2>{{ isEditing ? 'Edit Collection' : 'Create New Collection' }}</h2>
+            <form (ngSubmit)="onSubmit()">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" [(ngModel)]="collection.name" required>
 
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" [(ngModel)]="collection.description" required></textarea>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" [(ngModel)]="collection.description" required></textarea>
 
-        <button type="submit">{{ isEditing ? 'Update Collection' : 'Create Collection' }}</button>
-    </form>
-</div>
+                <button type="submit">{{ isEditing ? 'Update Collection' : 'Create Collection' }}</button>
+            </form>
+        </div>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

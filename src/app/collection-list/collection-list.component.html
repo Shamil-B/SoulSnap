@@ -1,14 +1,35 @@
-<app-navbar></app-navbar>
-<div class="collection-list">
-    <h2>Collections</h2>
-    <ul>
-        <li *ngFor="let collection of collections" (click)="navigateToCollection(collection.id)">
-            <span>{{ collection.name }}</span>
-            <p>{{ collection.description }}</p>
-            <div class="actions">
-                <button (click)="editCollecion(collection.id)">Edit</button>
-                <button (click)="deleteCollection(collection.id)">Delete</button>
-            </div>
-        </li>
-    </ul>
-</div>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened="true">
+        <div class=" logo">
+            <!-- Your logo or app name goes here -->
+            <a routerLink="/collections">SoulSnap</a>
+        </div>
+        <ul class="navigation">
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Collections</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="collection-list">
+            <h2>Collections</h2>
+            <ul>
+                <li *ngFor="let collection of collections" (click)="navigateToCollection(collection.id)">
+                    <span>{{ collection.name }}</span>
+                    <p>{{ collection.description }}</p>
+                    <div class="actions">
+                        <button (click)="editCollecion(collection.id)">Edit</button>
+                        <button (click)="deleteCollection(collection.id)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

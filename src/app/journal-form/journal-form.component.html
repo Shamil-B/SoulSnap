@@ -1,17 +1,37 @@
 <!-- journal-form.component.html -->
-<app-navbar></app-navbar>
-<div class="journal-form">
-    <h2>{{ isEditing ? 'Edit Journal Entry' : 'Create New Journal Entry' }}</h2>
-    <form (ngSubmit)="onSubmit()">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" [(ngModel)]="journal.title" required>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened="true">
+        <div class=" logo">
+            <!-- Your logo or app name goes here -->
+            <a routerLink="/collections">SoulSnap</a>
+        </div>
+        <ul class="navigation">
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Collections</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="journal-form">
+            <h2>{{ isEditing ? 'Edit Journal Entry' : 'Create New Journal Entry' }}</h2>
+            <form (ngSubmit)="onSubmit()">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" [(ngModel)]="journal.title" required>
 
-        <label for="content">Content:</label>
-        <textarea id="content" name="content" [(ngModel)]="journal.content" required></textarea>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content" [(ngModel)]="journal.content" required></textarea>
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" [(ngModel)]="journal.date" required>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" [(ngModel)]="journal.date" required>
 
-        <button type="submit">{{ isEditing ? 'Update Journal Entry' : 'Create Journal Entry' }}</button>
-    </form>
-</div>
+                <button type="submit">{{ isEditing ? 'Update Journal Entry' : 'Create Journal Entry' }}</button>
+            </form>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

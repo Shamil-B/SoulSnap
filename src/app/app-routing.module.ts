@@ -6,16 +6,18 @@ import { JournalListComponent } from './journal-list/journal-list.component';
 import { JournalEntryComponent } from './journal-entry/journal-entry.component';
 import { CollectionFormComponent } from './collection-form/collection-form.component';
 import { JournalFormComponent } from './journal-form/journal-form.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/collections', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'collections', component: CollectionListComponent },
+  {path: "home", component: HomeComponent},
   { path: 'collections/:id', component: CollectionEntryComponent },
   { path: 'collections/:collectionId/journals', component: JournalListComponent },
   { path: 'collections/:collectionId/journals/:journalId', component: JournalEntryComponent },
   { path: 'create-collection', component: CollectionFormComponent },
   { path: 'create-journal/:collectionId/:journalId', component: JournalFormComponent },
-  {path: '**', redirectTo: '/collections'}
+  {path: '**', redirectTo: '/home'}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

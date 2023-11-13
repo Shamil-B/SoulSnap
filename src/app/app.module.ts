@@ -13,6 +13,9 @@ import { CollectionFormComponent } from './collection-form/collection-form.compo
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import {FormsModule} from '@angular/forms';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -25,12 +28,15 @@ import {FormsModule} from '@angular/forms';
     CollectionFormComponent,
     NavbarComponent,
     FooterComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

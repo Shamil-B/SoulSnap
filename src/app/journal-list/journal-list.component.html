@@ -1,13 +1,34 @@
 <!-- journal-list.component.html -->
-<app-navbar [collectionId]="collection ? collection.id : ''"></app-navbar>
-<div class="journal-list">
-    <h2>{{collection?.name}} Collection</h2>
-    <ul>
-        <li *ngFor="let journal of journals" (click)="navigateToJournal(journal.id)">
-            <span>{{ journal.title }}</span>
-            <p>{{ journal.content }}</p>
-            <p class="date">{{ journal.date }}</p>
-        </li>
-    </ul>
-    {{ journals.length === 0 ? 'No journals found.' : ''}}
-</div>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened="true">
+        <div class=" logo">
+            <!-- Your logo or app name goes here -->
+            <a routerLink="/collections">SoulSnap</a>
+        </div>
+        <ul class="navigation">
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Collections</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
+            </li>
+            <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="journal-list">
+            <h2>{{collection?.name}} Collection</h2>
+            <ul>
+                <li *ngFor="let journal of journals" (click)="navigateToJournal(journal.id)">
+                    <span>{{ journal.title }}</span>
+                    <p>{{ journal.content }}</p>
+                    <p class="date">{{ journal.date }}</p>
+                </li>
+            </ul>
+            {{ journals.length === 0 ? 'No journals found.' : ''}}
+        </div>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
