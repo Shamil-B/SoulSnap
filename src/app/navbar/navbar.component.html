@@ -1,0 +1,15 @@
+<!-- navbar.component.html -->
+
+<nav class="navbar">
+    <div class="logo">
+        <!-- Your logo or app name goes here -->
+        <a routerLink="/collections">SoulSnap</a>
+    </div>
+    <div class="nav-links">
+        <a routerLink="/collections">Collections</a>
+    </div>
+    <div class="action-buttons">
+        <button routerLink="/create-collection">Create Collection</button>
+        <button *ngIf="collectionId" (click)="navigateToCreateJournal()">Create Journal</button>
+    </div>
+</nav>

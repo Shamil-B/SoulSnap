@@ -1,0 +1,13 @@
+<!-- journal-list.component.html -->
+<app-navbar [collectionId]="collection ? collection.id : ''"></app-navbar>
+<div class="journal-list">
+    <h2>{{collection?.name}} Collection</h2>
+    <ul>
+        <li *ngFor="let journal of journals" (click)="navigateToJournal(journal.id)">
+            <span>{{ journal.title }}</span>
+            <p>{{ journal.content }}</p>
+            <p class="date">{{ journal.date }}</p>
+        </li>
+    </ul>
+    {{ journals.length === 0 ? 'No journals found.' : ''}}
+</div>

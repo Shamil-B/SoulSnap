@@ -1,0 +1,16 @@
+<!-- journal-details.component.html -->
+<app-navbar></app-navbar>
+<div class="journal-details">
+    <div *ngIf="journal">
+        <h2>{{ journal?.title }}</h2>
+        <p class="date">{{ journal?.date }}</p>
+        <p>{{ journal?.content }}</p>
+        <div class="actions">
+            <button (click)="editJournal()">Edit</button>
+            <button (click)="deleteJournal()">Delete</button>
+        </div>
+    </div>
+    <div *ngIf="!journal">
+        <p>Journal entry not found.</p>
+    </div>
+</div>
