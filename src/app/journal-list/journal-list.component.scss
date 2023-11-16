@@ -73,6 +73,10 @@ mat-nav-list{
       }
     }
 
+    :nth-child(1) {
+      font-size: 2rem;
+    }
+
     h2{
       padding: 0;
       margin: 0;
