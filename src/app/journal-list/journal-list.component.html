@@ -19,7 +19,10 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="journal-list">
-            <h2>{{collection?.name}} Collection</h2>
+            <div class="header">
+                <h2>{{collection?.name}} Collection </h2>
+                <mat-icon (click)="navigateToCreateJournal()">add</mat-icon>
+            </div>
             <ul>
                 <li *ngFor="let journal of journals" (click)="navigateToJournal(journal.id)">
                     <span>{{ journal.title }}</span>

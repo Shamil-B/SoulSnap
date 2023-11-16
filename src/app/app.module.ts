@@ -16,6 +16,7 @@ import {FormsModule} from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { HomeComponent } from './home/home.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { HomeComponent } from './home/home.component';
     BrowserAnimationsModule,
     FormsModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

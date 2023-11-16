@@ -36,4 +36,9 @@ export class JournalListComponent implements OnInit {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     this.router.navigate(['/collections', collectionId, 'journals', journalId]);
   }
+
+  navigateToCreateJournal(){
+    // Navigate to the create journal page
+    this.router.navigate(['create-journal', this.collection?.id,"0"]);
+  }
 }
