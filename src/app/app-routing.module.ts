@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'collections/:id', component: CollectionEntryComponent },
   { path: 'collections/:collectionId/journals', component: JournalListComponent },
   { path: 'collections/:collectionId/journals/:journalId', component: JournalEntryComponent },
-  { path: 'create-collection', component: CollectionFormComponent },
+  { path: 'create-collection/:collectionId', component: CollectionFormComponent },
   { path: 'create-journal/:collectionId/:journalId', component: JournalFormComponent },
   {path: '**', redirectTo: '/home'}
 ];

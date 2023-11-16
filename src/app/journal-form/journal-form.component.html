@@ -19,18 +19,21 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="journal-form">
-            <h2>{{ isEditing ? 'Edit Journal Entry' : 'Create New Journal Entry' }}</h2>
+            <h2>{{ isEditing ? journal.title : 'Create New Journal' }}</h2>
             <form (ngSubmit)="onSubmit()">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" [(ngModel)]="journal.title" required>
+                <input type="text" placeholder="Your journal's title" id="title" name="title"
+                    [(ngModel)]="journal.title" required>
 
-                <label for="content">Content:</label>
-                <textarea id="content" name="content" [(ngModel)]="journal.content" required></textarea>
+                <textarea id="content" placeholder="Your journal's content" name="content" [(ngModel)]="journal.content"
+                    required></textarea>
 
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" [(ngModel)]="journal.date" required>
-
-                <button type="submit">{{ isEditing ? 'Update Journal Entry' : 'Create Journal Entry' }}</button>
+                <div class="actions">
+                    <button type="submit">{{ isEditing ? 'Update Journal' : 'Create Journal' }}</button>
+                    <!-- we will add the delete button with icon -->
+                    <button *ngIf="isEditing" (click)="deleteJournal()">
+                        Delete
+                    </button>
+                </div>
             </form>
         </div>
     </mat-sidenav-content>

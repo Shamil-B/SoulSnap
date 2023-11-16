@@ -32,7 +32,7 @@ export class CollectionListComponent implements OnInit {
 
   editCollecion(collectionId: string) {
     // Navigate to the edit page of the selected collection
-    this.router.navigate(['/collections', collectionId, 'edit']);
+    this.router.navigate(['/create-collection', collectionId]);
   }
 
   deleteCollection(collectionId: string) {
@@ -40,5 +40,9 @@ export class CollectionListComponent implements OnInit {
     this.collectionService.deleteCollection(collectionId);
     // Reload the collections
     this.loadCollections();
+  }
+
+  createCollection(){
+    this.router.navigate(['/create-collection', '-1']);
   }
 }

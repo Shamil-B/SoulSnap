@@ -29,7 +29,7 @@ export class CollectionFormComponent implements OnInit {
 
   checkEditMode() {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    if (collectionId) {
+    if (collectionId && collectionId !== '-1') {
       // Editing an existing collection
       this.isEditing = true;
       const existingCollection = this.collectionService.getCollectionById(collectionId);

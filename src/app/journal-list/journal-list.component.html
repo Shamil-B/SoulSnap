@@ -24,7 +24,7 @@
                 <mat-icon (click)="navigateToCreateJournal()">add</mat-icon>
             </div>
             <ul>
-                <li *ngFor="let journal of journals" (click)="navigateToJournal(journal.id)">
+                <li *ngFor="let journal of journals" (click)="editJournal(journal.id)">
                     <span>{{ journal.title }}</span>
                     <p>{{ journal.content }}</p>
                     <p class="date">{{ journal.date }}</p>

@@ -41,4 +41,12 @@ export class JournalListComponent implements OnInit {
     // Navigate to the create journal page
     this.router.navigate(['create-journal', this.collection?.id,"0"]);
   }
+
+  editJournal(journalId: string) {
+    const collectionId = this.route.snapshot.paramMap.get('collectionId');
+    if (collectionId && journalId) {
+      // Navigate to the edit page (replace 'edit-journal' with your actual route)
+      this.router.navigate(['create-journal', collectionId, journalId]);
+    }
+  }
 }

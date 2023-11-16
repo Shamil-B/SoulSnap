@@ -19,13 +19,13 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="collection-form">
-            <h2>{{ isEditing ? 'Edit Collection' : 'Create New Collection' }}</h2>
+            <h2>{{ isEditing ? collection.name : 'Create New Collection' }}</h2>
             <form (ngSubmit)="onSubmit()">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" [(ngModel)]="collection.name" required>
+                <input placeholder="Collection title" type="text" id="name" name="name" [(ngModel)]="collection.name"
+                    required>
 
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" [(ngModel)]="collection.description" required></textarea>
+                <textarea placeholder="Collection description" id=" description" name="description"
+                    [(ngModel)]="collection.description" required></textarea>
 
                 <button type="submit">{{ isEditing ? 'Update Collection' : 'Create Collection' }}</button>
             </form>

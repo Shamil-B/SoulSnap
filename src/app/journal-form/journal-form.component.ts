@@ -28,6 +28,17 @@ export class JournalFormComponent implements OnInit {
     this.checkEditMode();
   }
 
+  deleteJournal() {
+    const collectionId = this.route.snapshot.paramMap.get('collectionId');
+    const journalId = this.route.snapshot.paramMap.get('journalId');
+    if (collectionId && journalId) {
+      // Delete the journal entry
+      this.journalService.deleteJournal(journalId);
+      // Navigate back to the journal list
+      this.router.navigate(['/collections', collectionId, 'journals']);
+    }
+  }
+
   checkEditMode() {
     const journalId = this.route.snapshot.paramMap.get('journalId');
     
@@ -59,6 +70,7 @@ export class JournalFormComponent implements OnInit {
         this.journal = newJournal;
       }
     }
+    
     
     // Navigate back to the journal list (replace 'journals' with your actual route)
     this.router.navigate(['/collections', this.journal.collectionId, 'journals']);

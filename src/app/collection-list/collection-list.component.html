@@ -20,7 +20,7 @@
         <div class="collection-list">
             <div class="header">
                 <h2>Collections</h2>
-                <mat-icon routerLink="/create-collection">add</mat-icon>
+                <mat-icon (click)="createCollection()">add</mat-icon>
             </div>
             <ul>
                 <li *ngFor=" let collection of collections" (click)="navigateToCollection(collection.id)">
