@@ -6,8 +6,8 @@
             <a routerLink="/collections">SoulSnap</a>
         </div>
         <ul class="navigation">
-            <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Collections</a>
+            <li routerLink="/collections">
+                <a mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
             </li>
             <li>
                 <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
@@ -28,7 +28,7 @@
                 <li *ngFor="let journal of journals" (click)="editJournal(journal.id)">
                     <span>{{ journal.title }}</span>
                     <p>{{ journal.content }}</p>
-                    <p class="date">{{ journal.date }}</p>
+                    <p class="date">{{ journal.date | date }}</p>
                 </li>
             </ul>
             {{ journals.length === 0 ? 'No journals found.' : ''}}

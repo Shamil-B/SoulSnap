@@ -15,7 +15,6 @@ import { FooterComponent } from './footer/footer.component';
 import {FormsModule} from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
-import { HomeComponent } from './home/home.component';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
@@ -29,7 +28,6 @@ import { MatIconModule } from '@angular/material/icon';
     CollectionFormComponent,
     NavbarComponent,
     FooterComponent,
-    HomeComponent,
   ],
   imports: [
     BrowserModule,
