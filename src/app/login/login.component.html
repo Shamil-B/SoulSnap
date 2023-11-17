@@ -11,6 +11,7 @@
                     <input placeholder="Your password" [(ngModel)]="user.password" type="password" id="password"
                         name="password" required>
                 </div>
+                <div class="error-message">{{errorMessage}}</div>
                 <a routerLink="/register">Create an account?</a>
                 <button type="submit" (click)="login()">Login</button>
             </form>

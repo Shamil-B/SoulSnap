@@ -13,22 +13,20 @@ export class AuthService {
   login(user : User){
     return this.fireauth.signInWithEmailAndPassword(user.email, user.password).then((user)=>{
       localStorage.setItem('token', "true");
-      return true;
+      return 'success';
     }, err => {
-      alert(err.message);
       localStorage.setItem('token', "false");
-      return false;
+      return err.message;
     });
   }
 
   register(user : User){
     return this.fireauth.createUserWithEmailAndPassword(user.email, user.password).then((user)=>{
       localStorage.setItem('token', "true");
-      return true;
+      return 'success';
     }).catch((err)=>{
-      alert(err.message);
       localStorage.setItem('token', "false");
-      return false;
+      return err.message;
     });
   }
 

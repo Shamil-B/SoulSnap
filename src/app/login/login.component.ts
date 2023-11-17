@@ -22,15 +22,24 @@ export class LoginComponent {
     email:'',
     password:''
   }
+
+  errorMessage : string = "";
   // Add login logic here
 
   login(){
+    // simple validation
+    if(this.user.email == "" || this.user.password == ""){
+      this.errorMessage = "Please enter email and password";
+      return;
+    }
+
     this.authService.login(this.user).then((res)=>{
-      if(res){
+      if(res === 'success'){
+        this.errorMessage = "";
         this.router.navigate(['/collections']);
       }
       else{
-        alert("Wrong email or password");
+        this.errorMessage = res;
       }
     });
   }

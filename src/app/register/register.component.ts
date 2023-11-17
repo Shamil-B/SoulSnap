@@ -18,18 +18,27 @@ export class RegisterComponent {
     }
   }
 
+  errorMessage : String = "";
+
   user : User = {
     email:'',
     password:''
   }
 
   register(){
+    // simple validation
+    if(this.user.email == "" || this.user.password == ""){
+      this.errorMessage = "Please enter email and password";
+      return;
+    }
+
     this.authService.register(this.user).then((res)=>{
-      if(res){
+      if(res === 'success'){
+        this.errorMessage = "";
         this.router.navigate(['/collections']);
       }
       else{
-        alert("Register failed");
+        this.errorMessage = res;
       }});
   }
 }
