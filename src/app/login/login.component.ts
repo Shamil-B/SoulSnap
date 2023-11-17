@@ -24,6 +24,7 @@ export class LoginComponent {
   }
 
   errorMessage : string = "";
+  isLoading : boolean = false;
   // Add login logic here
 
   login(){
@@ -33,7 +34,11 @@ export class LoginComponent {
       return;
     }
 
+    this.isLoading = true;
+    this.errorMessage = '';
+
     this.authService.login(this.user).then((res)=>{
+      this.isLoading = false;
       if(res === 'success'){
         this.errorMessage = "";
         this.router.navigate(['/collections']);

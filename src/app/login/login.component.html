@@ -11,8 +11,13 @@
                     <input placeholder="Your password" [(ngModel)]="user.password" type="password" id="password"
                         name="password" required>
                 </div>
-                <div class="error-message">{{errorMessage}}</div>
-                <a routerLink="/register">Create an account?</a>
+                <div class="status-box">
+
+                    <div class="error-message">
+                        {{errorMessage}}
+                    </div>
+                    <mat-spinner color="accent" diameter="28" *ngIf="isLoading"></mat-spinner>
+                </div><a routerLink="/register">Create an account?</a>
                 <button type="submit" (click)="login()">Login</button>
             </form>
         </div>

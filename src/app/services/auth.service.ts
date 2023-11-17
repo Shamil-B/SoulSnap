@@ -16,7 +16,10 @@ export class AuthService {
       return 'success';
     }, err => {
       localStorage.setItem('token', "false");
-      return err.message;
+      if(err.message.includes('badly')){
+        return 'Invalid email address';
+      }
+      return "Invalid email or password";
     });
   }
 
@@ -26,7 +29,10 @@ export class AuthService {
       return 'success';
     }).catch((err)=>{
       localStorage.setItem('token', "false");
-      return err.message;
+      if(err.message.includes('badly')){
+        return 'Invalid email address';
+      }
+      return "Email already in use";
     });
   }
 

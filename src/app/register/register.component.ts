@@ -18,12 +18,14 @@ export class RegisterComponent {
     }
   }
 
-  errorMessage : String = "";
-
   user : User = {
     email:'',
     password:''
   }
+
+  errorMessage : string = "";
+  isLoading : boolean = false;
+  // Add register logic here
 
   register(){
     // simple validation
@@ -32,13 +34,18 @@ export class RegisterComponent {
       return;
     }
 
+    this.isLoading = true;
+    this.errorMessage = '';
+
     this.authService.register(this.user).then((res)=>{
+      this.isLoading = false;
       if(res === 'success'){
         this.errorMessage = "";
         this.router.navigate(['/collections']);
       }
       else{
         this.errorMessage = res;
-      }});
+      }
+    });
   }
 }

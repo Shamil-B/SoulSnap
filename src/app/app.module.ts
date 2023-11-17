@@ -20,6 +20,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environments';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { environment } from '../environments/environments';
     MatListModule,
     MatIconModule,
     AngularFireModule.initializeApp(environment.firebase),
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
