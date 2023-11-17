@@ -6,6 +6,7 @@ import { JournalService } from '../services/journal.service'; // Import your jou
 import { Journal } from '../interfaces/journal'; // Import the JournalEntry ince
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-journal-list',
@@ -15,12 +16,16 @@ import { Collection } from '../interfaces/collections';
 export class JournalListComponent implements OnInit {
   journals: Journal[] = [];
   collection? : Collection;
-  constructor(private journalService: JournalService, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService) {}
+  constructor(private journalService: JournalService, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
   
   ngOnInit(): void {
-    this.loadJournals();
+    if(this.authService.isLoggedIn()){
+      this.loadJournals();
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
-  
   loadJournals() {
     let collectionId  = this.route.snapshot.paramMap.get('collectionId');
     if (collectionId) {
@@ -48,5 +53,9 @@ export class JournalListComponent implements OnInit {
       // Navigate to the edit page (replace 'edit-journal' with your actual route)
       this.router.navigate(['create-journal', collectionId, journalId]);
     }
+  }
+
+  logout(){
+    this.authService.logout();
   }
 }

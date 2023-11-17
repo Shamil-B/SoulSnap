@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
 import { generateUniqueId } from '../utilities/generate-id';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-collection-form',
@@ -21,10 +22,15 @@ export class CollectionFormComponent implements OnInit {
 
   isEditing = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private collectionService: CollectionService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.checkEditMode();
+    if(this.authService.isLoggedIn()){
+      this.checkEditMode();
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
 
   checkEditMode() {
@@ -52,5 +58,9 @@ export class CollectionFormComponent implements OnInit {
 
     // Navigate back to the collection list (replace 'collections' with your actual route)
     this.router.navigate(['/collections']);
+  }
+  
+  logout(){
+    this.authService.logout();
   }
 }

@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-collection-list',
@@ -14,12 +15,16 @@ import { Collection } from '../interfaces/collections';
 export class CollectionListComponent implements OnInit {
   collections: Collection[] = [];
 
-  constructor(private collectionService: CollectionService, private router: Router) {}
+  constructor(private collectionService: CollectionService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.loadCollections();
+    if(this.authService.isLoggedIn()){
+      this.loadCollections();
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
-
   loadCollections() {
     // Fetch collections from the service
     this.collections = this.collectionService.getCollections();
@@ -44,5 +49,9 @@ export class CollectionListComponent implements OnInit {
 
   createCollection(){
     this.router.navigate(['/create-collection', '-1']);
+  }
+
+  logout(){
+    this.authService.logout();
   }
 }

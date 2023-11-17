@@ -16,6 +16,10 @@ import {FormsModule} from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../environments/environments';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,8 @@ import { MatIconModule } from '@angular/material/icon';
     CollectionFormComponent,
     NavbarComponent,
     FooterComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +42,8 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatSidenavModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    AngularFireModule.initializeApp(environment.firebase),
   ],
   providers: [],
   bootstrap: [AppComponent]

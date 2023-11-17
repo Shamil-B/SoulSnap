@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
 import { generateUniqueId } from '../utilities/generate-id';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-journal-form',
@@ -22,10 +23,15 @@ export class JournalFormComponent implements OnInit {
 
   isEditing = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private journalService: JournalService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private journalService: JournalService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.checkEditMode();
+    if(this.authService.isLoggedIn()){
+      this.checkEditMode();
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
 
   deleteJournal() {
@@ -74,6 +80,10 @@ export class JournalFormComponent implements OnInit {
     
     // Navigate back to the journal list (replace 'journals' with your actual route)
     this.router.navigate(['/collections', this.journal.collectionId, 'journals']);
+  }
+
+  logout(){
+    this.authService.logout();
   }
 }
 

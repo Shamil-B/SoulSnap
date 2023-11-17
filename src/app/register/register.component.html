@@ -1,0 +1,19 @@
+<mat-sidenav-container>
+    <div class="container">
+        <div class="register-container">
+            <h2>Register</h2>
+            <form>
+                <div class="form-group">
+                    <input placeholder="New email " [(ngModel)]="user.email" type="email" id="email" name="email"
+                        required>
+                </div>
+                <div class="form-group">
+                    <input placeholder="New password" [(ngModel)]="user.password" type="password" id="password"
+                        name="password" required>
+                </div>
+                <a routerLink="/login">Already have an account?</a>
+                <button type="submit" (click)="register()">Register</button>
+            </form>
+        </div>
+    </div>
+</mat-sidenav-container>
