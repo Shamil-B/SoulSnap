@@ -40,10 +40,10 @@ export class CollectionListComponent implements OnInit {
     this.router.navigate(['/collections', collection.id,"journals", collection.name]);
   }
 
-  editCollecion(collectionId: string, event : Event) {
+  editCollecion(collectionId: string, event : Event, title: string) {
     // Navigate to the edit page of the selected collection
     event.stopPropagation();
-    this.router.navigate(['/create-collection', collectionId]);
+    this.router.navigate(['/create-collection', collectionId, title]);
   }
 
   deleteCollection(collectionId: string, event : Event) {

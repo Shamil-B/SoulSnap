@@ -21,7 +21,10 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="journal-form">
-            <h2>{{ isEditing ? journal.title : 'Create New Journal' }}</h2>
+            <div class="header">
+                <mat-icon (click)="navigateBack()">arrow_back_ios</mat-icon>
+                <h2>{{ this.title }}</h2>
+            </div>
             <form (ngSubmit)="onSubmit()">
                 <input type="text" placeholder="Your journal's title" id="title" name="title"
                     [(ngModel)]="journal.title" required>

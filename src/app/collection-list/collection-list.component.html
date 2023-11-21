@@ -29,7 +29,7 @@
                     <span>{{ collection.name }}</span>
                     <p>{{ collection.description }}</p>
                     <div class="actions">
-                        <button (click)="editCollecion(collection.id, $event)">Edit</button>
+                        <button (click)="editCollecion(collection.id, $event, collection.name)">Edit</button>
                         <button (click)="deleteCollection(collection.id, $event)">Delete</button>
                     </div>
                 </li>

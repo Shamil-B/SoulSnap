@@ -101,6 +101,13 @@ export class JournalFormComponent implements OnInit {
       }
     }
 
+    
+    // Navigate back to the journal list (replace 'journals' with your actual route)
+    this.router.navigate(['/collections', collectionId, 'journals', this.title]);
+  }
+  
+  navigateBack(){
+    const collectionId = this.route.snapshot.paramMap.get('collectionId');
     // Navigate back to the journal list (replace 'journals' with your actual route)
     this.router.navigate(['/collections', collectionId, 'journals', this.title]);
   }

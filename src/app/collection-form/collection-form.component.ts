@@ -21,11 +21,14 @@ export class CollectionFormComponent implements OnInit {
     journals: []
   };
 
+  title : string = "";
+
   isEditing = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
 
   ngOnInit(): void {
+    this.title = this.route.snapshot.paramMap.get('title') || "Create Collection";
     if(this.authService.isLoggedIn()){
       this.checkEditMode();
     }
@@ -57,7 +60,6 @@ export class CollectionFormComponent implements OnInit {
       // Create new collection
       this.collectionService.addCollection({ ...this.collection, id:generateUniqueId()});
     }
-
     // Navigate back to the collection list (replace 'collections' with your actual route)
     this.router.navigate(['/collections']);
   }

@@ -21,7 +21,10 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="collection-form">
-            <h2>{{ isEditing ? collection.name : 'Create New Collection' }}</h2>
+            <div class="header">
+                <mat-icon routerLink="/collections">arrow_back_ios</mat-icon>
+                <h2>{{ this.title }}</h2>
+            </div>
             <form (ngSubmit)="onSubmit()">
                 <input placeholder="Collection title" type="text" id="name" name="name" [(ngModel)]="collection.name"
                     required>
