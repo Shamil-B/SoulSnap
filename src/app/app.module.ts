@@ -18,9 +18,14 @@ import {MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environments';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
+import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { FirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireModule } from '@angular/fire/compat';
 
 @NgModule({
   declarations: [
@@ -44,8 +49,12 @@ import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
+    MatProgressSpinnerModule,
+    FirestoreModule,
+    AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebase),
-    MatProgressSpinnerModule
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent]

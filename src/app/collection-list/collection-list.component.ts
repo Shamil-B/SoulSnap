@@ -27,26 +27,36 @@ export class CollectionListComponent implements OnInit {
   }
   loadCollections() {
     // Fetch collections from the service
-    this.collections = this.collectionService.getCollections();
+    this.collectionService.getCollections().subscribe((data) => {
+      this.collections = data.map((e : any) => {
+        console.log(e as Collection[]);
+        return e as Collection;
+      });
+    })
   }
 
-  navigateToCollection(collectionId: string) {
+  navigateToCollection(collection: Collection) {
     // Navigate to the details of the selected collection
-    this.router.navigate(['/collections', collectionId,"journals"]);
+    this.router.navigate(['/collections', collection.id,"journals", collection.name]);
   }
 
-  editCollecion(collectionId: string) {
+  editCollecion(collectionId: string, event : Event) {
     // Navigate to the edit page of the selected collection
+    event.stopPropagation();
     this.router.navigate(['/create-collection', collectionId]);
   }
 
-  deleteCollection(collectionId: string) {
-    // Delete the selected collection
-    this.collectionService.deleteCollection(collectionId);
-    // Reload the collections
-    this.loadCollections();
-  }
+  deleteCollection(collectionId: string, event : Event) {
+    event.stopPropagation();
+    try{
+      this.collectionService.deleteCollection(collectionId);
+    }
+    catch(error){
+      console.log(error);
+    }
 
+  }
+  
   createCollection(){
     this.router.navigate(['/create-collection', '-1']);
   }

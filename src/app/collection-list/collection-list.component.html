@@ -25,12 +25,12 @@
                 <mat-icon (click)="createCollection()">add</mat-icon>
             </div>
             <ul>
-                <li *ngFor=" let collection of collections" (click)="navigateToCollection(collection.id)">
+                <li *ngFor=" let collection of collections" (click)="navigateToCollection(collection)">
                     <span>{{ collection.name }}</span>
                     <p>{{ collection.description }}</p>
                     <div class="actions">
-                        <button (click)="editCollecion(collection.id)">Edit</button>
-                        <button (click)="deleteCollection(collection.id)">Delete</button>
+                        <button (click)="editCollecion(collection.id, $event)">Edit</button>
+                        <button (click)="deleteCollection(collection.id, $event)">Delete</button>
                     </div>
                 </li>
             </ul>

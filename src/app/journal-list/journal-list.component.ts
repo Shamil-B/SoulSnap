@@ -16,10 +16,13 @@ import { AuthService } from '../services/auth.service';
 export class JournalListComponent implements OnInit {
   journals: Journal[] = [];
   collection? : Collection;
+  title = '';
   constructor(private journalService: JournalService, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
   
   ngOnInit(): void {
+    this.title = this.route.snapshot.paramMap.get('title') ?? '';
     if(this.authService.isLoggedIn()){
+      // we will refresh the page
       this.loadJournals();
     }
     else{
@@ -28,11 +31,15 @@ export class JournalListComponent implements OnInit {
   }
   loadJournals() {
     let collectionId  = this.route.snapshot.paramMap.get('collectionId');
-    if (collectionId) {
-      // Fetch journals based on the selected collection
-      this.collection = this.collectionService.getCollectionById(collectionId);
-      this.journals = this.journalService.getJournalsByCollection(collectionId);
-      console.log(this.journals);
+    if(collectionId){
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+        if (collection) {
+          console.log(collection);
+          this.collection = collection;
+          this.journals = this.journalService.getJournals(this.collection);
+        }
+      }
+      );
     }
   }
 
@@ -44,14 +51,14 @@ export class JournalListComponent implements OnInit {
 
   navigateToCreateJournal(){
     // Navigate to the create journal page
-    this.router.navigate(['create-journal', this.collection?.id,"0"]);
+    this.router.navigate(['create-journal', this.collection?.id,"0",this.title]);
   }
 
   editJournal(journalId: string) {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     if (collectionId && journalId) {
       // Navigate to the edit page (replace 'edit-journal' with your actual route)
-      this.router.navigate(['create-journal', collectionId, journalId]);
+      this.router.navigate(['create-journal', collectionId, journalId, this.title]);
     }
   }
 

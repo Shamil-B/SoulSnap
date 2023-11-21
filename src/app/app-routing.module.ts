@@ -13,10 +13,10 @@ const routes: Routes = [
   { path: '', redirectTo: '/collections', pathMatch: 'full' },
   { path: 'collections', component: CollectionListComponent },
   { path: 'collections/:id', component: CollectionEntryComponent },
-  { path: 'collections/:collectionId/journals', component: JournalListComponent },
+  { path: 'collections/:collectionId/journals/:title', component: JournalListComponent },
   { path: 'collections/:collectionId/journals/:journalId', component: JournalEntryComponent },
   { path: 'create-collection/:collectionId', component: CollectionFormComponent },
-  { path: 'create-journal/:collectionId/:journalId', component: JournalFormComponent },
+  { path: 'create-journal/:collectionId/:journalId/:title', component: JournalFormComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
   { path: '**', redirectTo: '/login'}

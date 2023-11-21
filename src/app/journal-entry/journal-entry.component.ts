@@ -24,7 +24,7 @@ export class JournalEntryComponent implements OnInit {
     const journalId = this.route.snapshot.paramMap.get('journalId');
     if (collectionId && journalId) {
       // Fetch the specific journal entry
-      this.journal = this.journalService.getJournalById(journalId);
+      // this.journal = this.journalService.getJournalById(journalId);
     }
   }
 
@@ -42,7 +42,7 @@ export class JournalEntryComponent implements OnInit {
     const journalId = this.route.snapshot.paramMap.get('journalId');
     if (collectionId && journalId) {
       // Delete the journal entry
-      this.journalService.deleteJournal(journalId);
+      // this.journalService.deleteJournal(journalId);
       // Navigate back to the journal list
       this.router.navigate(['/collections', collectionId, 'journals']);
     }

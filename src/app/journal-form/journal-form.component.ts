@@ -6,6 +6,7 @@ import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
 import { generateUniqueId } from '../utilities/generate-id';
 import { AuthService } from '../services/auth.service';
+import { CollectionService } from '../services/collection.service';
 
 @Component({
   selector: 'app-journal-form',
@@ -13,19 +14,21 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./journal-form.component.scss'],
 })
 export class JournalFormComponent implements OnInit {
-  journal: Journal = {
+  title:string = '';
+    journal: Journal = {
     id: '', // You might generate a unique ID for new entries
     title: '',
     content: '',
     date: new Date(),
     collectionId: '', // Initialize with the collection ID (you need to fetch this from the route or service)
   };
-
+  
   isEditing = false;
-
-  constructor(private route: ActivatedRoute, private router: Router, private journalService: JournalService, private authService : AuthService) {}
-
+  
+  constructor(private route: ActivatedRoute, private router: Router, private journalService: JournalService, private authService : AuthService, private collectionService : CollectionService) {}
+  
   ngOnInit(): void {
+    this.title = this.route.snapshot.paramMap.get('title') ?? '';
     if(this.authService.isLoggedIn()){
       this.checkEditMode();
     }
@@ -33,53 +36,73 @@ export class JournalFormComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
-
+  
   deleteJournal() {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     const journalId = this.route.snapshot.paramMap.get('journalId');
     if (collectionId && journalId) {
       // Delete the journal entry
-      this.journalService.deleteJournal(journalId);
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+        if (collection) {
+          this.journalService.deleteJournal(collection, journalId);
+        }
+      }
+      );
       // Navigate back to the journal list
-      this.router.navigate(['/collections', collectionId, 'journals']);
+      this.router.navigate(['/collections', collectionId, 'journals', this.title]);
     }
   }
 
   checkEditMode() {
     const journalId = this.route.snapshot.paramMap.get('journalId');
+    const collectionId = this.route.snapshot.paramMap.get('collectionId');
     
     let existingJournal = null;
     if(journalId){
-      existingJournal = this.journalService.getJournalById(journalId);
+      this.collectionService.getCollectionById(collectionId ?? '').forEach((collection) => {
+        if (collection) {
+          existingJournal = this.journalService.getJournalById(collection, journalId);
+          if (existingJournal) {
+            // Editing an existing journal entry
+            this.isEditing = true;
+            this.journal = existingJournal;
+          }
+          else {
+           // Handle case where the journal entry is not found
+         }
+        }
+      }
+      );
     }
-    if (existingJournal) {
-      // Editing an existing journal entry
-      this.isEditing = true;
-      this.journal = existingJournal;
-    }
-    else {
-     // Handle case where the journal entry is not found
-   }
   }
   
   onSubmit() {
+    const collectionId : string = this.route.snapshot.paramMap.get('collectionId') ?? '';
     if (this.isEditing) {
       // Update existing journal entry
-      this.journalService.updateJournal(this.journal);
+      this.collectionService.getCollectionById(this.journal.collectionId).forEach((collection) => {
+        if (collection) {
+          this.journalService.updateJournal(collection, this.journal);
+        }
+      }
+      );
     } else {
       // Create new journal entry
-      const collectionId = this.route.snapshot.paramMap.get('collectionId');
       const newId  = generateUniqueId();
-      this.journalService.addJournal({ ...this.journal, id: newId, collectionId:collectionId ?? ""});
-      const newJournal = this.journalService.getJournalById(newId);
-      if (newJournal){
-        this.journal = newJournal;
+      if(collectionId){
+        this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+          if (collection) {
+            this.journal.id = newId;
+            this.journal.collectionId = collection.id;
+            this.journalService.addJournal(collection, this.journal);
+          }
+        }
+        );
       }
     }
-    
-    
+
     // Navigate back to the journal list (replace 'journals' with your actual route)
-    this.router.navigate(['/collections', this.journal.collectionId, 'journals']);
+    this.router.navigate(['/collections', collectionId, 'journals', this.title]);
   }
 
   logout(){

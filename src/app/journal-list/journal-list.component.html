@@ -23,14 +23,14 @@
         <div class="journal-list">
             <div class="header">
                 <mat-icon routerLink="/collections">arrow_back_ios</mat-icon>
-                <h2>{{collection?.name}} Collection </h2>
+                <h2>{{this.title}}</h2>
                 <mat-icon (click)="navigateToCreateJournal()">add</mat-icon>
             </div>
             <ul>
                 <li *ngFor="let journal of journals" (click)="editJournal(journal.id)">
                     <span>{{ journal.title }}</span>
                     <p>{{ journal.content }}</p>
-                    <p class="date">{{ journal.date | date }}</p>
+                    <!-- <p class="date">{{ journal.date | date}}</p> -->
                 </li>
             </ul>
             {{ journals.length === 0 ? 'No journals found.' : ''}}

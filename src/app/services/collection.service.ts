@@ -2,53 +2,71 @@
 
 import { Injectable } from '@angular/core';
 import { Collection } from '../interfaces/collections';
+import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
 
+import { collection, updateDoc, addDoc, doc, Firestore, collectionData, getDoc, deleteDoc } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root',
 })
 export class CollectionService {
-  private collections: Collection[] = [
-    // Sample data, replace with your actual data
-    {
-      id: '1',
-      name: 'Travel Journals',
-      description: 'Memories from around the world',
-      creationDate: new Date(),
-    },
-    {
-      id: '2',
-      name: 'Personal Reflections',
-      description: 'Thoughts and musings',
-      creationDate: new Date(),
-    },
-    // Add more collections as needed
-  ];
-
+  firestore: Firestore = inject(Firestore);
+  
   // Get all collections
-  getCollections(): Collection[] {
-    return this.collections;
+  getCollections() {
+    const collectionInstance = collection(this.firestore,"Collections"); 
+    return collectionData(collectionInstance, {idField: "id"});
   }
 
   // Get a specific collection by ID
-  getCollectionById(id: string): Collection | undefined {
-    return this.collections.find((collection) => collection.id === id);
-  }
+  // Get a specific collection by ID
+getCollectionById(id: string): Observable<Collection | undefined> {
+  const collectionInstance = collection(this.firestore, 'Collections');
+  const docRef = doc(collectionInstance, id);
+
+  return new Observable<Collection | undefined>((observer) => {
+    getDoc(docRef)
+      .then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const collectionData = docSnapshot.data() as Collection;
+          // Assuming your Collection interface has an 'id' field
+          collectionData.id = docSnapshot.id;
+          observer.next(collectionData);
+        } else {
+          observer.next(undefined); // Collection with provided ID doesn't exist
+        }
+        observer.complete();
+      })
+      .catch((error) => {
+        observer.error(error); // Handle error while fetching the document
+      });
+  });
+}
+
+  // collection is our document
 
   // Add a new collection
   addCollection(newCollection: Collection): void {
-    this.collections.push(newCollection);
+    try {
+      addDoc(collection(this.firestore,"Collections"), newCollection);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Update an existing collection
   updateCollection(updatedCollection: Collection): void {
-    const index = this.collections.findIndex((collection) => collection.id === updatedCollection.id);
-    if (index !== -1) {
-      this.collections[index] = updatedCollection;
+    try{
+      const docInstance = doc(collection(this.firestore,"Collections"), updatedCollection.id);
+      updateDoc(docInstance, {...updatedCollection});
+    }
+    catch(error){
+      console.log(error);
     }
   }
 
   // Delete a collection by ID
-  deleteCollection(id: string): void {
-    this.collections = this.collections.filter((collection) => collection.id !== id);
+  deleteCollection(id: string): any {
+    deleteDoc(doc(collection(this.firestore,"Collections"), id));
   }
 }

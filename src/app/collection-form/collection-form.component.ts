@@ -18,6 +18,7 @@ export class CollectionFormComponent implements OnInit {
     name: '',
     description: '',
     creationDate: new Date(),
+    journals: []
   };
 
   isEditing = false;
@@ -38,12 +39,13 @@ export class CollectionFormComponent implements OnInit {
     if (collectionId && collectionId !== '-1') {
       // Editing an existing collection
       this.isEditing = true;
-      const existingCollection = this.collectionService.getCollectionById(collectionId);
-      if (existingCollection) {
-        this.collection = { ...existingCollection };
-      } else {
-        // Handle case where the collection is not found
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+        console.log(collection);
+        if (collection) {
+          this.collection = collection;
+        }
       }
+      );
     }
   }
 
@@ -53,7 +55,7 @@ export class CollectionFormComponent implements OnInit {
       this.collectionService.updateCollection(this.collection);
     } else {
       // Create new collection
-      this.collectionService.addCollection({ ...this.collection, id: generateUniqueId() });
+      this.collectionService.addCollection({ ...this.collection, id:generateUniqueId()});
     }
 
     // Navigate back to the collection list (replace 'collections' with your actual route)
