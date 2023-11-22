@@ -66,9 +66,11 @@ export class CollectionFormComponent implements OnInit {
   onSubmit() {
     if (this.isEditing) {
       // Update existing collection
+      console.log("I asked");
       this.collectionService.updateCollection(this.collection);
     } else {
       // Create new collection
+      console.log("I asked 2");
       this.collectionService.addCollection({ ...this.collection, id:generateUniqueId()});
     }
     // Navigate back to the collection list (replace 'collections' with your actual route)

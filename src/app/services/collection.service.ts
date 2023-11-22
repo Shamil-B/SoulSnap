@@ -65,6 +65,7 @@ getCollectionById(id: string): Observable<Collection | undefined> {
   }
   // Update an existing collection
   updateCollection(updatedCollection: Collection): void {
+    console.log(updatedCollection);
     try{
       const docInstance = doc(collection(this.firestore,"Collections"), updatedCollection.id);
       updateDoc(docInstance, {...updatedCollection});

@@ -48,7 +48,7 @@ export class JournalFormComponent implements OnInit {
     }
   }
   
-  deleteJournal() {
+  deleteJournal(event: Event) {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     const journalId = this.route.snapshot.paramMap.get('journalId');
     if (collectionId && journalId) {
@@ -93,6 +93,7 @@ export class JournalFormComponent implements OnInit {
   }
   
   onSubmit() {
+    console.log("I was called")
     const collectionId : string = this.route.snapshot.paramMap.get('collectionId') ?? '';
     if (this.isEditing) {
       // Update existing journal entry

@@ -37,6 +37,7 @@ export class JournalService {
       }
       return journal;
     });
+    console.log("I asked original");
     this.collectionService.updateCollection(collection);
   }
 

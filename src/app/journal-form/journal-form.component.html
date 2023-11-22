@@ -31,7 +31,7 @@
             <div class="no-content" *ngIf="!isLoading && journal === null">
                 Journal not found
             </div>
-            <form *ngIf="!isLoading" (ngSubmit)="onSubmit()">
+            <form *ngIf="!isLoading">
                 <input #firstJournalInputField type="text" placeholder="Your journal's title" id="title" name="title"
                     [(ngModel)]="journal.title" required>
 
@@ -39,9 +39,8 @@
                     required></textarea>
 
                 <div class="actions">
-                    <button type="submit">{{ isEditing ? 'Update Journal' : 'Create Journal' }}</button>
-                    <!-- we will add the delete button with icon -->
-                    <button *ngIf="isEditing" (click)="deleteJournal()">
+                    <button (click)="onSubmit()">{{ isEditing ? 'Update Journal' : 'Create Journal' }}</button>
+                    <button *ngIf="isEditing" (click)="deleteJournal($event)">
                         Delete
                     </button>
                 </div>
