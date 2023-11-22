@@ -1,5 +1,4 @@
 /* journal-form.component.scss */
-
 .container{
   height: 100vh;
 
@@ -26,7 +25,7 @@
         width: 100%;
     
         &:hover {
-          background-color: rgba(0,0,20,0.1);
+          background-color: rgba(0,0,20,0.4);
         }
         
         a{
@@ -161,5 +160,10 @@ mat-nav-list{
         }
       }
     }
+  }
+  
+
+.collection{
+      background-color: rgba(0,0,20,0.4);
   }
   

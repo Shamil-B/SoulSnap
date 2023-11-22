@@ -26,7 +26,7 @@
         width: 100%;
     
         &:hover {
-          background-color: rgba(0,0,20,0.1);
+          background-color: rgba(0,0,20,0.4);
         }
         
         a{
@@ -185,3 +185,7 @@ mat-nav-list{
     height: 60vh;
     font-size: 1.6rem;
   }
+
+  .collection{
+    background-color: rgba(0,0,20,0.4);
+}
