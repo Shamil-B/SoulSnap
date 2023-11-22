@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 
 export class CollectionListComponent implements OnInit {
   collections: Collection[] = [];
+  isLoading : boolean = false;
 
   constructor(private collectionService: CollectionService, private router: Router, private authService: AuthService) {}
 
@@ -27,11 +28,12 @@ export class CollectionListComponent implements OnInit {
   }
   loadCollections() {
     // Fetch collections from the service
+    this.isLoading = true;
     this.collectionService.getCollections().subscribe((data) => {
       this.collections = data.map((e : any) => {
-        console.log(e as Collection[]);
         return e as Collection;
       });
+      this.isLoading = false;
     })
   }
 
@@ -58,7 +60,7 @@ export class CollectionListComponent implements OnInit {
   }
   
   createCollection(){
-    this.router.navigate(['/create-collection', '-1']);
+    this.router.navigate(['/create-collection', '-1','']);
   }
 
   logout(){

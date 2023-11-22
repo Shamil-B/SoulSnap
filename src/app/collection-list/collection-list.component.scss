@@ -166,3 +166,19 @@ mat-nav-list{
   }
   
   
+  .loading-indicator{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60vh;
+  }
+
+  .no-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60vh;
+    font-size: 1.6rem;
+  }

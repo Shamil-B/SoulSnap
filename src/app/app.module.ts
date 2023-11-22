@@ -26,6 +26,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { AngularFireModule } from '@angular/fire/compat';
     FooterComponent,
     LoginComponent,
     RegisterComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

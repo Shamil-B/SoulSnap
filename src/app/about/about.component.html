@@ -1,0 +1,63 @@
+<!-- collection-form.component.html -->
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened="true">
+        <div class=" logo">
+            <!-- Your logo or app name goes here -->
+            <a routerLink="/collections">SoulSnap</a>
+        </div>
+        <ul class="navigation">
+            <li>
+                <a routerLink="/Collections" mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
+            </li>
+            <li routerLink="/about">
+                <a mat-list-item routerLinkActive="active">About Us</a>
+            </li>
+            <!-- <li>
+                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
+            </li> -->
+            <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
+                out</button>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <section class="about-us">
+            <div class="about-container">
+                <h2 class="title">About SoulSnap</h2>
+                <p class="welcome"><i>Hey there, Soulsnap! It's your dimension for sorting out your thoughts and
+                        scribbles! This web app, Soulsnap, it's where you stash all those crazy ideas and musings, you
+                        know?
+                        You can even create these cool collections to tidy up your journals and notes. It's like, bam!
+                        Organization right at your fingertips, baby!</i>
+                </p>
+
+                <h2>Meet the Creator</h2>
+                <img src="" />
+                <div class="team-member">
+                    <div class="member-info">
+                        <div class="avatar">
+                            <img src="https://i.pinimg.com/originals/94/76/24/947624e9216145ae503d6aeede82531c.jpg" />
+                        </div>
+                        <div class="details">
+                            <h3>Rick Sanchez</h3>
+                            <p>Sole Developer of SoulSnap</p>
+                            <ul class="social-links">
+                                <li><a href="https://github.com/shamil-b" target="_blank">GitHub</a></li>
+                                <li><a href="https://leetcode.com/shamil_b" target="_blank">LeetCode</a></li>
+                                <li><a href="https://www.linkedin.com/in/shamil-bedru-884883202"
+                                        target="_blank">LinkedIn</a></li>
+                                <!-- Add more social links here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more team members if needed -->
+
+                <footer>
+                    <p>Contact: shamilbedru47@email.com | Phone: +251978512230</p>
+                </footer>
+            </div>
+        </section>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

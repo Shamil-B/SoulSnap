@@ -9,12 +9,12 @@
             <li>
                 <a routerLink="/Collections" mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
             </li>
-            <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">About Us</a>
+            <li routerLink="/about">
+                <a mat-list-item routerLinkActive="active">About Us</a>
             </li>
-            <li>
+            <!-- <li>
                 <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li>
+            </li> -->
             <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
                 out</button>
         </ul>
@@ -23,7 +23,7 @@
         <div class="collection-form">
             <div class="header">
                 <mat-icon routerLink="/collections">arrow_back_ios</mat-icon>
-                <h2>{{ this.title }}</h2>
+                <h2>{{ collection.id !== '' ? collection.name : this.title }}</h2>
             </div>
             <form (ngSubmit)="onSubmit()">
                 <input placeholder="Collection title" type="text" id="name" name="name" [(ngModel)]="collection.name"

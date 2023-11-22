@@ -8,6 +8,7 @@ import { CollectionFormComponent } from './collection-form/collection-form.compo
 import { JournalFormComponent } from './journal-form/journal-form.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/collections', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'create-journal/:collectionId/:journalId/:title', component: JournalFormComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
+  { path: 'about', component: AboutComponent},
   { path: '**', redirectTo: '/login'}
 ];
 @NgModule({

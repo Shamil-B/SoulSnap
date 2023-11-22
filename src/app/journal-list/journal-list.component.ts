@@ -16,6 +16,7 @@ import { AuthService } from '../services/auth.service';
 export class JournalListComponent implements OnInit {
   journals: Journal[] = [];
   collection? : Collection;
+  isLoading : boolean = false;
   title = '';
   constructor(private journalService: JournalService, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
   
@@ -30,16 +31,20 @@ export class JournalListComponent implements OnInit {
     }
   }
   loadJournals() {
+    this.isLoading = true;
     let collectionId  = this.route.snapshot.paramMap.get('collectionId');
     if(collectionId){
       this.collectionService.getCollectionById(collectionId).forEach((collection) => {
         if (collection) {
-          console.log(collection);
           this.collection = collection;
           this.journals = this.journalService.getJournals(this.collection);
+          this.isLoading = false;
         }
       }
-      );
+      ).catch(error => {
+        console.log(error);
+        this.isLoading = false;
+      });
     }
   }
 

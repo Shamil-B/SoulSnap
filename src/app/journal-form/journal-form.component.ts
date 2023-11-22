@@ -15,13 +15,15 @@ import { CollectionService } from '../services/collection.service';
 })
 export class JournalFormComponent implements OnInit {
   title:string = '';
-    journal: Journal = {
-    id: '', // You might generate a unique ID for new entries
-    title: '',
-    content: '',
-    date: new Date(),
-    collectionId: '', // Initialize with the collection ID (you need to fetch this from the route or service)
-  };
+  isLoading : boolean = false;
+
+  journal: Journal = {
+  id: '', // You might generate a unique ID for new entries
+  title: '',
+  content: '',
+  date: new Date(),
+  collectionId: '', // Initialize with the collection ID (you need to fetch this from the route or service)
+};
   
   isEditing = false;
   
@@ -45,11 +47,11 @@ export class JournalFormComponent implements OnInit {
       this.collectionService.getCollectionById(collectionId).forEach((collection) => {
         if (collection) {
           this.journalService.deleteJournal(collection, journalId);
+          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
         }
       }
       );
       // Navigate back to the journal list
-      this.router.navigate(['/collections', collectionId, 'journals', this.title]);
     }
   }
 
@@ -58,7 +60,8 @@ export class JournalFormComponent implements OnInit {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     
     let existingJournal = null;
-    if(journalId){
+    if(journalId && journalId !== '0'){
+      this.isLoading = true;
       this.collectionService.getCollectionById(collectionId ?? '').forEach((collection) => {
         if (collection) {
           existingJournal = this.journalService.getJournalById(collection, journalId);
@@ -66,13 +69,17 @@ export class JournalFormComponent implements OnInit {
             // Editing an existing journal entry
             this.isEditing = true;
             this.journal = existingJournal;
+            this.isLoading = false;
           }
           else {
-           // Handle case where the journal entry is not found
+           this.isLoading = false;
          }
         }
       }
-      );
+      ).catch(error => {
+        console.log(error);
+        this.isLoading = false;
+      });
     }
   }
   
@@ -83,6 +90,7 @@ export class JournalFormComponent implements OnInit {
       this.collectionService.getCollectionById(this.journal.collectionId).forEach((collection) => {
         if (collection) {
           this.journalService.updateJournal(collection, this.journal);
+          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
         }
       }
       );
@@ -95,6 +103,7 @@ export class JournalFormComponent implements OnInit {
             this.journal.id = newId;
             this.journal.collectionId = collection.id;
             this.journalService.addJournal(collection, this.journal);
+            this.router.navigate(['/collections', collectionId, 'journals', this.title]);
           }
         }
         );
@@ -103,7 +112,6 @@ export class JournalFormComponent implements OnInit {
 
     
     // Navigate back to the journal list (replace 'journals' with your actual route)
-    this.router.navigate(['/collections', collectionId, 'journals', this.title]);
   }
   
   navigateBack(){
