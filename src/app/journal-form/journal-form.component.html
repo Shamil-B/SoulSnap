@@ -32,7 +32,7 @@
                 Journal not found
             </div>
             <form *ngIf="!isLoading" (ngSubmit)="onSubmit()">
-                <input type="text" placeholder="Your journal's title" id="title" name="title"
+                <input #firstJournalInputField type="text" placeholder="Your journal's title" id="title" name="title"
                     [(ngModel)]="journal.title" required>
 
                 <textarea id="content" placeholder="Your journal's content" name="content" [(ngModel)]="journal.content"

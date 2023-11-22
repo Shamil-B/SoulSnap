@@ -1,6 +1,7 @@
 // collection-form.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
@@ -13,6 +14,15 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./collection-form.component.scss'],
 })
 export class CollectionFormComponent implements OnInit {
+  @ViewChild('firstInputField') firstInputField!: ElementRef;
+
+  ngAfterViewInit() {
+    // Use a timeout to ensure that the input element is available in the DOM
+    setTimeout(() => {
+      this.firstInputField.nativeElement.focus();
+    });
+  }
+
   collection: Collection = {
     id: '', // You might generate a unique ID for new entries
     name: '',

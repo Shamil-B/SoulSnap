@@ -1,6 +1,6 @@
 // journal-form.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
@@ -14,6 +14,15 @@ import { CollectionService } from '../services/collection.service';
   styleUrls: ['./journal-form.component.scss'],
 })
 export class JournalFormComponent implements OnInit {
+  @ViewChild('firstJournalInputField') firstInputField!: ElementRef;
+
+  ngAfterViewInit() {
+    // Use a timeout to ensure that the input element is available in the DOM
+    setTimeout(() => {
+      this.firstInputField.nativeElement.focus();
+    });
+  }
+  
   title:string = '';
   isLoading : boolean = false;
 
