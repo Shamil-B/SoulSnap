@@ -11,7 +11,7 @@
 }
 
 .login-container {
-  border: 1px solid rgba(255, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   max-width: 400px;
   margin-top: 10rem;
   height: fit-content;
@@ -23,11 +23,12 @@
   gap: 2rem;
   background-color: rgba(100, 100, 100, 0.1);
   box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+  transition: 0.2s;
 }
 
 .login-container:hover{
-  border: 1px solid rgba(255, 0, 0, 0.9);
-  box-shadow: 1px 1px 5px 1px rgba(255, 0, 0, 0.4);
+  border: 1px solid rgba(203, 203, 203, 0.9);
+  box-shadow: 1px 1px 5px 1px rgba(90, 90, 90, 0.4);
   }
 
 .form-group {
@@ -48,7 +49,7 @@ input {
 input:focus {
   outline: none;
   background-color: rgba(100, 100, 100, 0.2);
-  border: 1px solid rgba(255, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 input::placeholder {
