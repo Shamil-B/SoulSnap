@@ -22,7 +22,7 @@ export class JournalFormComponent implements OnInit {
   title: '',
   content: '',
   date: new Date(),
-  collectionId: '', // Initialize with the collection ID (you need to fetch this from the route or service)
+  collectionId: '',
 };
   
   isEditing = false;

@@ -5,17 +5,24 @@ import { Collection } from '../interfaces/collections';
 import { Observable } from 'rxjs';
 import { inject } from '@angular/core';
 
-import { collection, updateDoc, addDoc, doc, Firestore, collectionData, getDoc, deleteDoc } from '@angular/fire/firestore';
+import { collection, updateDoc, addDoc, doc, Firestore, collectionData, getDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
 export class CollectionService {
   firestore: Firestore = inject(Firestore);
-  
+  authService: AuthService = inject(AuthService);
+
   // Get all collections
-  getCollections() {
-    const collectionInstance = collection(this.firestore,"Collections"); 
-    return collectionData(collectionInstance, {idField: "id"});
+  getCollections(): Observable<any[]> {
+    const collectionInstance = collection(this.firestore, 'Collections');
+    const email = this.authService.getUser();
+
+    // Creating a query to filter documents by 'creator_email'
+    const filteredQuery = query(collectionInstance, where('creator_email', '==', email));
+    
+    return collectionData(filteredQuery, { idField: 'id' });
   }
 
   // Get a specific collection by ID
@@ -48,12 +55,14 @@ getCollectionById(id: string): Observable<Collection | undefined> {
   // Add a new collection
   addCollection(newCollection: Collection): void {
     try {
-      addDoc(collection(this.firestore,"Collections"), newCollection);
-    } catch (error) {
+        const userEmail = this.authService.getUser();
+        newCollection.creator_email = userEmail ?? '';
+        addDoc(collection(this.firestore,"Collections"), newCollection);
+  }
+    catch(error){
       console.log(error);
     }
   }
-
   // Update an existing collection
   updateCollection(updatedCollection: Collection): void {
     try{

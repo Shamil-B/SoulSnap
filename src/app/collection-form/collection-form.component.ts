@@ -18,7 +18,8 @@ export class CollectionFormComponent implements OnInit {
     name: '',
     description: '',
     creationDate: new Date(),
-    journals: []
+    journals: [],
+    creator_email:'', // Initialize with the collection ID (you need to fetch this from the route or service)
   };
 
   title : string = "";

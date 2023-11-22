@@ -6,5 +6,6 @@ export interface Collection {
     description: string;
     journals: Journal[];
     creationDate: Date;
+    creator_email: string;
   }
   
