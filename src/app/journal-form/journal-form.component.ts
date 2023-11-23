@@ -19,7 +19,7 @@ export class JournalFormComponent implements OnInit {
   ngAfterViewInit() {
     // Use a timeout to ensure that the input element is available in the DOM
     setTimeout(() => {
-      this.firstInputField.nativeElement.focus();
+      this.firstInputField?.nativeElement.focus();
     });
   }
   
