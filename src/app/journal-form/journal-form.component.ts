@@ -93,11 +93,10 @@ export class JournalFormComponent implements OnInit {
   }
   
   onSubmit() {
-    console.log("I was called")
     const collectionId : string = this.route.snapshot.paramMap.get('collectionId') ?? '';
     if (this.isEditing) {
       // Update existing journal entry
-      this.collectionService.getCollectionById(this.journal.collectionId).forEach((collection) => {
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
         if (collection) {
           this.journalService.updateJournal(collection, this.journal);
           this.router.navigate(['/collections', collectionId, 'journals', this.title]);
