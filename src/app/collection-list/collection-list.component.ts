@@ -11,51 +11,59 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss'],
 })
+
 export class CollectionListComponent implements OnInit {
   collections: Collection[] = [];
-  isLoading = false;
+  isLoading : boolean = false;
 
-  constructor(
-    private collectionService: CollectionService,
-    private router: Router,
-    private authService: AuthService
-  ) { }
+  constructor(private collectionService: CollectionService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
+    if(this.authService.isLoggedIn()){
       this.loadCollections();
-    } else {
+    }
+    else{
       this.router.navigate(['/login']);
     }
   }
-
   loadCollections() {
+    // Fetch collections from the service
     this.isLoading = true;
     this.collectionService.getCollections().subscribe((data) => {
-      this.collections = data.map((e: any) => e as Collection);
+      this.collections = data.map((e : any) => {
+        return e as Collection;
+      });
       this.isLoading = false;
-    });
+    })
   }
 
   navigateToCollection(collection: Collection) {
-    this.router.navigate(['/collections', collection.id, 'journals', collection.name]);
+    // Navigate to the details of the selected collection
+    this.router.navigate(['/collections', collection.id,"journals", collection.name]);
   }
 
-  editCollecion(collectionId: string, event: Event, title: string) {
+  editCollecion(collectionId: string, event : Event, title: string) {
+    // Navigate to the edit page of the selected collection
     event.stopPropagation();
     this.router.navigate(['/create-collection', collectionId, title]);
   }
 
-  deleteCollection(collectionId: string, event: Event) {
+  deleteCollection(collectionId: string, event : Event) {
     event.stopPropagation();
-    try {
+    try{
       this.collectionService.deleteCollection(collectionId);
-    } catch (error) {
+    }
+    catch(error){
       console.log(error);
     }
+
+  }
+  
+  createCollection(){
+    this.router.navigate(['/create-collection', '-1','']);
   }
 
-  createCollection() {
-    this.router.navigate(['/create-collection', '-1', '']);
+  logout(){
+    this.authService.logout();
   }
 }

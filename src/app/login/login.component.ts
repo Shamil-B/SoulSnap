@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { User } from '../interfaces/user';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -8,46 +8,42 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
-  errorMessage = '';
-  isLoading = false;
-  hidePassword = true;
+export class LoginComponent {
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
+  constructor(private authService : AuthService, private router : Router){}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
+    if(this.authService.isLoggedIn()){
       this.router.navigate(['/collections']);
     }
   }
 
-  login(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+  user : User = {
+    email:'',
+    password:''
+  }
+
+  errorMessage : string = "";
+  isLoading : boolean = false;
+  // Add login logic here
+
+  login(){
+    // simple validation
+    if(this.user.email == "" || this.user.password == ""){
+      this.errorMessage = "Please enter email and password";
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { email, password } = this.loginForm.value;
-
-    this.authService.login({ email, password }).then((res) => {
+    this.authService.login(this.user).then((res)=>{
       this.isLoading = false;
-      if (res === 'success') {
-        this.errorMessage = '';
+      if(res === 'success'){
+        this.errorMessage = "";
         this.router.navigate(['/collections']);
-      } else {
+      }
+      else{
         this.errorMessage = res;
       }
     });

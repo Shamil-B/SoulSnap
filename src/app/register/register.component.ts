@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { User } from '../interfaces/user';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -8,46 +8,42 @@ import { Router } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
-  errorMessage = '';
-  isLoading = false;
-  hidePassword = true;
+export class RegisterComponent {
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
+  constructor(private authService : AuthService, private router : Router){}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
+    if(this.authService.isLoggedIn()){
       this.router.navigate(['/collections']);
     }
   }
 
-  register(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
+  user : User = {
+    email:'',
+    password:''
+  }
+
+  errorMessage : string = "";
+  isLoading : boolean = false;
+  // Add register logic here
+
+  register(){
+    // simple validation
+    if(this.user.email == "" || this.user.password == ""){
+      this.errorMessage = "Please enter email and password";
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { email, password } = this.registerForm.value;
-
-    this.authService.register({ email, password }).then((res) => {
+    this.authService.register(this.user).then((res)=>{
       this.isLoading = false;
-      if (res === 'success') {
-        this.errorMessage = '';
+      if(res === 'success'){
+        this.errorMessage = "";
         this.router.navigate(['/collections']);
-      } else {
+      }
+      else{
         this.errorMessage = res;
       }
     });
