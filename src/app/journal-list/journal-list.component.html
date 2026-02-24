@@ -1,45 +1,49 @@
-<!-- journal-list.component.html -->
-<mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened="true">
-        <div class=" logo">
-            <!-- Your logo or app name goes here -->
-            <a routerLink="/collections">SoulSnap</a>
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-left">
+            <button mat-icon-button routerLink="/collections" class="back-btn" matTooltip="Back to Collections">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div>
+                <h2>{{ this.title }}</h2>
+                <p class="header-subtitle">Thought fragments in this dimension</p>
+            </div>
         </div>
-        <ul class="navigation">
-            <li routerLink="/collections" class="collection">
-                <a mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
-            </li>
-            <li routerLink="/about">
-                <a mat-list-item routerLinkActive="active">About Us</a>
-            </li>
-            <!-- <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li> -->
-            <button class="logout" mat-list-item routerLinkActive="active" (click)="logout()">Log
-                out</button>
-        </ul>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="journal-list">
-            <div class="header">
-                <mat-icon routerLink="/collections">arrow_back_ios</mat-icon>
-                <h2>{{this.title}}</h2>
-                <mat-icon (click)="navigateToCreateJournal()">add</mat-icon>
-            </div>
-            <div class="loading-indicator" *ngIf="isLoading">
-                <mat-spinner [diameter]="50" [strokeWidth]="5" color="accent"></mat-spinner>
-            </div>
-            <div class="no-content" *ngIf="!isLoading && journals.length === 0">
-                No Journals Found
-            </div>
-            <ul *ngIf="!isLoading">
-                <li *ngFor="let journal of journals" (click)="editJournal(journal.id)">
-                    <span>{{ journal.title }}</span>
-                    <p>{{ journal.content }}</p>
-                    <!-- <p class="date">{{ journal.date | date}}</p> -->
-                </li>
-            </ul>
-        </div>
-    </mat-sidenav-content>
+        <button mat-flat-button class="create-btn" (click)="navigateToCreateJournal()">
+            <mat-icon>add</mat-icon>
+            <span>New Journal</span>
+        </button>
+    </div>
 
-</mat-sidenav-container>
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Tuning into this dimension...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && journals.length === 0">
+        <div class="empty-icon">🔮</div>
+        <h3>Eerily Quiet in Here...</h3>
+        <p>This dimension is empty. Time to capture some thoughts before they slip through the multiverse.</p>
+        <button mat-flat-button class="create-btn" (click)="navigateToCreateJournal()">
+            <mat-icon>add</mat-icon>
+            <span>Capture a Thought</span>
+        </button>
+    </div>
+
+    <!-- Card Grid -->
+    <div class="card-grid" *ngIf="!isLoading && journals.length > 0">
+        <mat-card *ngFor="let journal of journals; let i = index" class="journal-card"
+            [style.animation-delay]="i * 60 + 'ms'" (click)="editJournal(journal.id)">
+            <mat-card-content>
+                <div class="card-header-row">
+                    <mat-icon class="card-icon">description</mat-icon>
+                </div>
+                <h3 class="card-title">{{ journal.title }}</h3>
+                <p class="card-description">{{ journal.content || 'An empty thought...' }}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

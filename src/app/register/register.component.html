@@ -1,26 +1,62 @@
-<mat-sidenav-container>
-    <div class="container">
-        <div class="register-container">
-            <h2>Register</h2>
-            <form>
-                <div class="form-group">
-                    <input placeholder="new email... " [(ngModel)]="user.email" type="email" id="email" name="email"
-                        required>
-                </div>
-                <div class="form-group">
-                    <input placeholder="new password..." [(ngModel)]="user.password" type="password" id="password"
-                        name="password" required>
-                </div>
-                <div class="status-box">
+<div class="auth-page">
+    <!-- Cosmic Background Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
 
-                    <div class="error-message">
-                        {{errorMessage}}
-                    </div>
-                    <mat-spinner color="accent" diameter="28" *ngIf="isLoading"></mat-spinner>
-                </div>
-                <a routerLink="/login">Already have an account?</a>
-                <button type="submit" (click)="register()">Register</button>
-            </form>
+    <div class="auth-card glassmorphism">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <img src="assets/logo.png" alt="SoulSnap" class="logo-img">
+            <h1>SoulSnap</h1>
+        </div>
+
+        <p class="auth-tagline">Every genius needs a vault for their brilliance</p>
+
+        <!-- Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="register()" class="auth-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email" placeholder="your@email.com">
+                <mat-icon matPrefix>mail_outline</mat-icon>
+                <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
+                <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Enter a valid email</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'"
+                    placeholder="Min 6 characters">
+                <mat-icon matPrefix>lock_outline</mat-icon>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Password is required</mat-error>
+                <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">Min 6 characters</mat-error>
+            </mat-form-field>
+
+            <!-- Error Message -->
+            <div class="error-message" *ngIf="errorMessage">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-overlay" *ngIf="isLoading">
+                <mat-spinner diameter="32"></mat-spinner>
+            </div>
+
+            <!-- Submit -->
+            <button mat-flat-button type="submit" class="auth-submit-btn" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Create Your Dimension</span>
+                <span *ngIf="isLoading">Forging your vault...</span>
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="auth-footer">
+            <span>Already have a dimension?</span>
+            <a routerLink="/login">Enter here</a>
         </div>
     </div>
-</mat-sidenav-container>
+</div>

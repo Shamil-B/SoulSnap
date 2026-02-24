@@ -1,46 +1,60 @@
-<mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened="true">
-        <div class=" logo">
-            <!-- Your logo or app name goes here -->
-            <a routerLink="/collections">SoulSnap</a>
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-left">
+            <h2>Collections</h2>
+            <p class="header-subtitle">Your dimension vaults</p>
         </div>
-        <ul class="navigation">
-            <li class="collection">
-                <a mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
-            </li>
-            <li routerLink="/about">
-                <a mat-list-item routerLinkActive="active">About Us</a>
-            </li>
-            <!-- <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li> -->
-            <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
-                out</button>
-        </ul>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="collection-list">
-            <div class="header">
-                <h2>Collections</h2>
-                <mat-icon (click)="createCollection()">add</mat-icon>
-            </div>
-            <div class="loading-indicator" *ngIf="isLoading">
-                <mat-spinner [diameter]="50" [strokeWidth]="5" color="accent"></mat-spinner>
-            </div>
-            <div class="no-content" *ngIf="!isLoading && collections.length === 0">
-                No Collections Found
-            </div>
-            <ul *ngIf="!isLoading">
-                <li *ngFor=" let collection of collections" (click)="navigateToCollection(collection)">
-                    <span>{{ collection.name }}</span>
-                    <p>{{ collection.description }}</p>
-                    <div class="actions">
-                        <button (click)="editCollecion(collection.id, $event, collection.name)">Edit</button>
-                        <button (click)="deleteCollection(collection.id, $event)">Delete</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </mat-sidenav-content>
+        <button mat-flat-button class="create-btn" (click)="createCollection()">
+            <mat-icon>add</mat-icon>
+            <span>New Collection</span>
+        </button>
+    </div>
 
-</mat-sidenav-container>
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Scanning the multiverse...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && collections.length === 0">
+        <div class="empty-icon">🌌</div>
+        <h3>Wubba Lubba Dub Dub!</h3>
+        <p>Your dimension vault is empty. Create a collection and start storing those big-brain thoughts, genius.</p>
+        <button mat-flat-button class="create-btn" (click)="createCollection()">
+            <mat-icon>add</mat-icon>
+            <span>Create First Collection</span>
+        </button>
+    </div>
+
+    <!-- Card Grid -->
+    <div class="card-grid" *ngIf="!isLoading && collections.length > 0">
+        <mat-card *ngFor="let collection of collections; let i = index" class="collection-card"
+            [style.animation-delay]="i * 60 + 'ms'" (click)="navigateToCollection(collection)">
+            <mat-card-content>
+                <div class="card-header-row">
+                    <mat-icon class="card-icon">folder_special</mat-icon>
+                    <div class="card-actions">
+                        <button mat-icon-button matTooltip="Edit"
+                            (click)="editCollecion(collection.id, $event, collection.name)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Delete" class="delete-btn"
+                            (click)="deleteCollection(collection.id, $event)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="card-title">{{ collection.name }}</h3>
+                <p class="card-description">{{ collection.description || 'No description yet...' }}</p>
+                <div class="card-footer">
+                    <span class="card-meta">
+                        <mat-icon>auto_stories</mat-icon>
+                        {{ collection.journals.length || 0 }} journals
+                    </span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

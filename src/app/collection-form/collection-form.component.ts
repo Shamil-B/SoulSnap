@@ -1,7 +1,7 @@
 // collection-form.component.ts
 
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
@@ -14,36 +14,29 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./collection-form.component.scss'],
 })
 export class CollectionFormComponent implements OnInit {
-  @ViewChild('firstInputField') firstInputField!: ElementRef;
+  collectionForm: FormGroup;
+  isEditing = false;
+  title = '';
+  private collectionId = '';
 
-  ngAfterViewInit() {
-    // Use a timeout to ensure that the input element is available in the DOM
-    setTimeout(() => {
-      this.firstInputField.nativeElement.focus();
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private collectionService: CollectionService,
+    private authService: AuthService
+  ) {
+    this.collectionForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required]]
     });
   }
 
-  collection: Collection = {
-    id: '', // You might generate a unique ID for new entries
-    name: '',
-    description: '',
-    creationDate: new Date(),
-    journals: [],
-    creator_email:'', // Initialize with the collection ID (you need to fetch this from the route or service)
-  };
-
-  title : string = "";
-
-  isEditing = false;
-
-  constructor(private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
-
   ngOnInit(): void {
-    this.title = this.route.snapshot.paramMap.get('title') || "Create Collection";
-    if(this.authService.isLoggedIn()){
+    this.title = this.route.snapshot.paramMap.get('title') || 'Create Collection';
+    if (this.authService.isLoggedIn()) {
       this.checkEditMode();
-    }
-    else{
+    } else {
       this.router.navigate(['/login']);
     }
   }
@@ -51,33 +44,48 @@ export class CollectionFormComponent implements OnInit {
   checkEditMode() {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     if (collectionId && collectionId !== '-1') {
-      // Editing an existing collection
       this.isEditing = true;
+      this.collectionId = collectionId;
       this.collectionService.getCollectionById(collectionId).forEach((collection) => {
-        console.log(collection);
         if (collection) {
-          this.collection = collection;
+          this.collectionForm.patchValue({
+            name: collection.name,
+            description: collection.description
+          });
         }
-      }
-      );
+      });
     }
   }
 
   onSubmit() {
-    if (this.isEditing) {
-      // Update existing collection
-      console.log("I asked");
-      this.collectionService.updateCollection(this.collection);
-    } else {
-      // Create new collection
-      console.log("I asked 2");
-      this.collectionService.addCollection({ ...this.collection, id:generateUniqueId()});
+    if (this.collectionForm.invalid) {
+      this.collectionForm.markAllAsTouched();
+      return;
     }
-    // Navigate back to the collection list (replace 'collections' with your actual route)
+
+    const formValue = this.collectionForm.value;
+
+    if (this.isEditing) {
+      const updated: Collection = {
+        id: this.collectionId,
+        name: formValue.name,
+        description: formValue.description,
+        creationDate: new Date(),
+        journals: [],
+        creator_email: ''
+      };
+      this.collectionService.updateCollection(updated);
+    } else {
+      const newCollection: Collection = {
+        id: generateUniqueId(),
+        name: formValue.name,
+        description: formValue.description,
+        creationDate: new Date(),
+        journals: [],
+        creator_email: ''
+      };
+      this.collectionService.addCollection(newCollection);
+    }
     this.router.navigate(['/collections']);
-  }
-  
-  logout(){
-    this.authService.logout();
   }
 }

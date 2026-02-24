@@ -1,169 +1,151 @@
-/* journal-form.component.scss */
-.container{
-  height: 100vh;
-
-  .logo {
-    text-align: center;
-    margin: 40px 20px;
-    a {
-      text-decoration: none;
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  }
-
-  mat-sidenav{
-    width: 15%;
-    .navigation{
-      padding: 0;
-      list-style-type: none;
-      li{
-        text-align: center;
-        padding: 20px 0;
-        cursor: pointer;
-        width: 100%;
-    
-        &:hover {
-          background-color: rgba(0,0,20,0.4);
-        }
-        
-        a{
-          text-decoration: none;
-          color: rgb(255, 255, 255);
-          font-size: 1.5rem;
-          font-weight: 300;
-        }
-        
-      }
-
-    }
-    .logout{
-      position: absolute;
-      bottom: 10px;
-      width: 94%;
-      background-color: rgba(255, 0, 0, 0.7);
-      border: 1px solid rgba(174, 174, 174,0.5);
-      color: white;
-      padding: 12px 0px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-      margin: 0 3% ;
-  
-      &:last-child {
-        margin-right: 0;
-      }
-  
-      &:hover {
-        background-color: rgba(255, 0, 0, 0.9);
-      }
-    }
+/* ─── Page Container ─── */
+.page-container {
+  padding: var(--space-2xl) var(--space-2xl);
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 100vh;
 }
 
-mat-nav-list{
+/* ─── Page Header ─── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+
+  h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+  }
+}
+
+.back-btn {
+  color: var(--text-secondary) !important;
+  transition: all var(--transition-smooth) !important;
+
+  &:hover {
+    color: var(--neon-green) !important;
+    background: rgba(0, 255, 136, 0.08) !important;
+  }
+}
+
+/* ─── Form Card ─── */
+.form-card {
+  padding: var(--space-2xl);
+  position: relative;
+  animation: card-enter 0.5s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius-lg);
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), transparent 60%, rgba(0, 212, 255, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+.form-header {
   text-align: center;
-}
-}
+  margin-bottom: var(--space-xl);
 
-
-.collection-form {
-    width: 90%;
-    margin: 50px auto;
-
-    .header{
-      display: flex;
-      align-items: center;
-      margin-bottom: 3rem;
-      gap: 2rem;
-  
-      mat-icon {
-        cursor: pointer;
-        font-size: 3rem;
-        padding: 15px;
-        margin: 0;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-sizing: border-box;
-  
-        &:hover {
-          color: #d1d1d1;
-        }
-      }
-  
-      :nth-child(1) {
-        font-size: 2rem;
-      }
-  
-      h2{
-        padding: 0;
-        margin: 0;
-      }
-    }
-  
-    h2 {
-      font-size: 1.7rem;
-    }
-  
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      padding-top: 2rem;
-  
-      label {
-        margin-top: 10px;
-      }
-  
-      input,
-      textarea,
-      button {
-        margin-top: 5px;
-        padding: 18px;
-        background-color: rgba(200, 200, 200, 0.1);
-        color: white;
-        font-size: 1.3rem;
-        outline: none;
-        border: none;
-      }
-      .actions{
-        display: flex;
-        align-items: baseline;
-        gap: 20px;
-        // justify-content: space-between;
-      }
-
-      .actions :nth-child(2){
-        color: red;
-      }
-
-      textarea{
-        height: 200px;
-      }
-  
-      button {
-        width: 250px;
-        background-color:rgba(0, 0, 0, 0);
-        color: white;
-        border: 1px solid rgba(174, 174, 174,0.5);
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1.3rem;
-        font-weight: 500;
-        margin-top: 20px;
-        padding: 15px 20px;
-        &:hover {
-          background-color: rgba(174, 174, 174,0.1);
-        }
-      }
-    }
+  .form-icon {
+    font-size: 2.5rem;
+    width: 40px;
+    height: 40px;
+    color: var(--neon-green);
+    margin-bottom: var(--space-sm);
+    text-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
   }
-  
 
-.collection{
-      background-color: rgba(0,0,20,0.4);
+  .form-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-style: italic;
   }
-  
+}
+
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Form ─── */
+.cosmic-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+}
+
+/* ─── Form Actions ─── */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 12px 24px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, var(--neon-green), #00cc6a) !important;
+  color: #060a1a !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  cursor: pointer;
+  transition: all var(--transition-smooth) !important;
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.2);
+
+  mat-icon {
+    font-size: 1.2rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 255, 136, 0.35) !important;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancel-btn {
+  color: var(--text-secondary) !important;
+  font-size: 0.9rem !important;
+
+  &:hover {
+    color: var(--text-primary) !important;
+  }
+}
