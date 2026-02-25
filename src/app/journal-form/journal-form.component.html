@@ -1,50 +1,58 @@
-<!-- journal-form.component.html -->
-<mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened="true">
-        <div class=" logo">
-            <!-- Your logo or app name goes here -->
-            <a routerLink="/collections">SoulSnap</a>
+<div class="page-container">
+    <div class="page-header">
+        <button mat-icon-button (click)="navigateBack()" class="back-btn"
+            matTooltip="Back to Journals"><mat-icon>arrow_back</mat-icon></button>
+        <h2>{{ isEditing ? 'Edit Journal' : 'New Journal' }}</h2>
+    </div>
+    <div class="loading-state" *ngIf="isLoading"><mat-spinner diameter="48"></mat-spinner>
+        <p>Loading thought fragment...</p>
+    </div>
+    <div class="form-card glassmorphism" *ngIf="!isLoading">
+        <div class="form-header">
+            <mat-icon class="form-icon">description</mat-icon>
+            <p class="form-subtitle">{{ isEditing ? 'Refine your captured thought' : 'Pour your thoughts into the void'
+                }}</p>
         </div>
-        <ul class="navigation">
-            <li class="collection">
-                <a mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
-            </li>
-            <li routerLink="/about">
-                <a mat-list-item routerLinkActive="active">About Us</a>
-            </li>
-            <!-- <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li> -->
-            <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
-                out</button>
-        </ul>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="journal-form">
-            <div class="header">
-                <mat-icon (click)="navigateBack()">arrow_back_ios</mat-icon>
-                <h2>{{ isEditing || isLoading ? journal.title : 'Create a new Journal' }}</h2>
-            </div>
-            <div class="loading-indicator" *ngIf="isLoading">
-                <mat-spinner [diameter]="50" [strokeWidth]="5" color="accent"></mat-spinner>
-            </div>
-            <div class="no-content" *ngIf="!isLoading && journal === null">
-                Journal not found
-            </div>
-            <form *ngIf="!isLoading">
-                <input #firstJournalInputField type="text" placeholder="Your journal's title" id="title" name="title"
-                    [(ngModel)]="journal.title" required>
+        <form [formGroup]="journalForm" (ngSubmit)="onSubmit()" class="cosmic-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Journal Title</mat-label>
+                <input matInput formControlName="title" placeholder="e.g., The meaning of existence">
+                <mat-icon matPrefix>title</mat-icon>
+                <mat-hint align="end">{{ journalForm.get('title')?.value?.length || 0 }}/100</mat-hint>
+                <mat-error *ngIf="journalForm.get('title')?.hasError('required')">Title is required</mat-error>
+                <mat-error *ngIf="journalForm.get('title')?.hasError('maxlength')">Max 100 characters</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="content-field">
+                <mat-label>Content</mat-label>
+                <textarea matInput formControlName="content"
+                    placeholder="Let your thoughts flow freely across dimensions..." rows="12"></textarea>
+                <mat-icon matPrefix>edit_note</mat-icon>
+                <mat-error *ngIf="journalForm.get('content')?.hasError('required')">Content is required</mat-error>
+            </mat-form-field>
 
-                <textarea id="content" placeholder="Your journal's content" name="content" [(ngModel)]="journal.content"
-                    required></textarea>
-
-                <div class="actions">
-                    <button (click)="onSubmit()">{{ isEditing ? 'Update Journal' : 'Create Journal' }}</button>
-                    <button *ngIf="isEditing" (click)="deleteJournal($event)">
-                        Delete
+            <!-- Mood Selector -->
+            <div class="mood-selector">
+                <label class="mood-label">How are you feeling?</label>
+                <div class="mood-options">
+                    <button *ngFor="let mood of moods" type="button" class="mood-btn"
+                        [class.mood-selected]="journalForm.get('mood')?.value === mood.value"
+                        (click)="journalForm.get('mood')?.setValue(journalForm.get('mood')?.value === mood.value ? '' : mood.value)">
+                        <span class="mood-emoji">{{ mood.emoji }}</span>
+                        <span class="mood-text">{{ mood.label }}</span>
                     </button>
                 </div>
-            </form>
-        </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+            </div>
+
+            <div class="form-actions">
+                <button mat-flat-button type="submit" class="submit-btn" [disabled]="journalForm.invalid">
+                    <mat-icon>{{ isEditing ? 'save' : 'add_circle' }}</mat-icon><span>{{ isEditing ? 'Update Journal' :
+                        'Capture Thought' }}</span>
+                </button>
+                <button mat-button type="button" *ngIf="isEditing" class="delete-btn" (click)="deleteJournal()">
+                    <mat-icon>delete_outline</mat-icon><span>Delete</span>
+                </button>
+                <button mat-button type="button" class="cancel-btn" (click)="navigateBack()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

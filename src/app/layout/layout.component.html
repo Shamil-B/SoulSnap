@@ -1,0 +1,39 @@
+<div class="app-shell">
+    <!-- Floating Navbar -->
+    <nav class="cosmic-navbar">
+        <div class="navbar-inner">
+            <!-- Logo (standalone) -->
+            <div class="navbar-brand">
+                <img src="/assets/logo.png" alt="SoulSnap" class="logo-img">
+                <span class="logo-text">SoulSnap</span>
+            </div>
+
+            <!-- Nav Links (pill group) -->
+            <div class="navbar-links">
+                <a routerLink="/collections" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact: true}"
+                    class="nav-link">
+                    <mat-icon>collections_bookmark</mat-icon><span>Collections</span>
+                </a>
+                <a routerLink="/about" routerLinkActive="nav-active" class="nav-link">
+                    <mat-icon>info</mat-icon><span>About</span>
+                </a>
+            </div>
+
+            <!-- Actions -->
+            <div class="navbar-actions">
+                <button class="theme-toggle-btn" (click)="themeService.toggle()"
+                    [matTooltip]="themeService.isDark ? 'Switch to light' : 'Switch to dark'">
+                    <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+                </button>
+                <button class="logout-btn" (click)="logout()" matTooltip="Log out">
+                    <mat-icon>power_settings_new</mat-icon>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content with route animation -->
+    <main class="main-content" [@routeAnimation]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </main>
+</div>
