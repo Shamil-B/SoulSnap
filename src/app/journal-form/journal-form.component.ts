@@ -1,136 +1,119 @@
-// journal-form.component.ts
-
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
 import { generateUniqueId } from '../utilities/generate-id';
 import { AuthService } from '../services/auth.service';
 import { CollectionService } from '../services/collection.service';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
-@Component({
-  selector: 'app-journal-form',
-  templateUrl: './journal-form.component.html',
-  styleUrls: ['./journal-form.component.scss'],
-})
+const MOODS = [
+  { value: 'energized', emoji: '🔥', label: 'Energized' },
+  { value: 'calm', emoji: '😌', label: 'Calm' },
+  { value: 'inspired', emoji: '💡', label: 'Inspired' },
+  { value: 'frustrated', emoji: '😤', label: 'Frustrated' },
+  { value: 'reflective', emoji: '🌙', label: 'Reflective' },
+];
+
+@Component({ selector: 'app-journal-form', templateUrl: './journal-form.component.html', styleUrls: ['./journal-form.component.scss'] })
 export class JournalFormComponent implements OnInit {
-  @ViewChild('firstJournalInputField') firstInputField!: ElementRef;
+  journalForm: FormGroup;
+  title = '';
+  isLoading = false;
+  isEditing = false;
+  moods = MOODS;
+  private journalId = '';
 
-  ngAfterViewInit() {
-    // Use a timeout to ensure that the input element is available in the DOM
-    setTimeout(() => {
-      this.firstInputField?.nativeElement.focus();
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private journalService: JournalService,
+    private authService: AuthService,
+    private collectionService: CollectionService,
+    private dialog: MatDialog
+  ) {
+    this.journalForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      content: ['', [Validators.required]],
+      mood: ['']
     });
   }
-  
-  title:string = '';
-  isLoading : boolean = false;
 
-  journal: Journal = {
-  id: '', // You might generate a unique ID for new entries
-  title: '',
-  content: '',
-  date: new Date(),
-  collectionId: '',
-};
-  
-  isEditing = false;
-  
-  constructor(private route: ActivatedRoute, private router: Router, private journalService: JournalService, private authService : AuthService, private collectionService : CollectionService) {}
-  
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') ?? '';
-    if(this.authService.isLoggedIn()){
-      this.checkEditMode();
-    }
-    else{
-      this.router.navigate(['/login']);
-    }
-  }
-  
-  deleteJournal(event: Event) {
-    const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    const journalId = this.route.snapshot.paramMap.get('journalId');
-    if (collectionId && journalId) {
-      // Delete the journal entry
-      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
-        if (collection) {
-          this.journalService.deleteJournal(collection, journalId);
-          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
-        }
-      }
-      );
-      // Navigate back to the journal list
-    }
+    if (this.authService.isLoggedIn()) { this.checkEditMode(); } else { this.router.navigate(['/login']); }
   }
 
   checkEditMode() {
     const journalId = this.route.snapshot.paramMap.get('journalId');
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    
-    let existingJournal = null;
-    if(journalId && journalId !== '0'){
-      this.isLoading = true;
+    if (journalId && journalId !== '0') {
+      this.isLoading = true; this.journalId = journalId;
       this.collectionService.getCollectionById(collectionId ?? '').forEach((collection) => {
         if (collection) {
-          existingJournal = this.journalService.getJournalById(collection, journalId);
+          const existingJournal = this.journalService.getJournalById(collection, journalId);
           if (existingJournal) {
-            // Editing an existing journal entry
             this.isEditing = true;
-            this.journal = existingJournal;
-            this.isLoading = false;
+            this.journalForm.patchValue({ title: existingJournal.title, content: existingJournal.content, mood: existingJournal.mood || '' });
           }
-          else {
-           this.isLoading = false;
-         }
+          this.isLoading = false;
+        }
+      }).catch(error => { console.log(error); this.isLoading = false; });
+    }
+  }
+
+  deleteJournal() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      panelClass: 'cosmic-dialog',
+      data: {
+        title: 'Delete Journal?',
+        message: 'This thought fragment will be permanently erased from the multiverse. No portal gun can bring it back.',
+        confirmText: 'Erase',
+      }
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        const collectionId = this.route.snapshot.paramMap.get('collectionId');
+        const journalId = this.route.snapshot.paramMap.get('journalId');
+        if (collectionId && journalId) {
+          this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+            if (collection) { this.journalService.deleteJournal(collection, journalId); this.router.navigate(['/collections', collectionId, 'journals', this.title]); }
+          });
         }
       }
-      ).catch(error => {
-        console.log(error);
-        this.isLoading = false;
+    });
+  }
+
+  onSubmit() {
+    if (this.journalForm.invalid) { this.journalForm.markAllAsTouched(); return; }
+    const collectionId: string = this.route.snapshot.paramMap.get('collectionId') ?? '';
+    const formValue = this.journalForm.value;
+    if (this.isEditing) {
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+        if (collection) {
+          const journal: Journal = { id: this.journalId, title: formValue.title, content: formValue.content, date: new Date(), collectionId, mood: formValue.mood || undefined };
+          this.journalService.updateJournal(collection, journal);
+          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
+        }
+      });
+    } else {
+      const newId = generateUniqueId();
+      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+        if (collection) {
+          const journal: Journal = { id: newId, title: formValue.title, content: formValue.content, date: new Date(), collectionId: collection.id, mood: formValue.mood || undefined };
+          this.journalService.addJournal(collection, journal);
+          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
+        }
       });
     }
   }
-  
-  onSubmit() {
-    const collectionId : string = this.route.snapshot.paramMap.get('collectionId') ?? '';
-    if (this.isEditing) {
-      // Update existing journal entry
-      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
-        if (collection) {
-          this.journalService.updateJournal(collection, this.journal);
-          this.router.navigate(['/collections', collectionId, 'journals', this.title]);
-        }
-      }
-      );
-    } else {
-      // Create new journal entry
-      const newId  = generateUniqueId();
-      if(collectionId){
-        this.collectionService.getCollectionById(collectionId).forEach((collection) => {
-          if (collection) {
-            this.journal.id = newId;
-            this.journal.collectionId = collection.id;
-            this.journalService.addJournal(collection, this.journal);
-            this.router.navigate(['/collections', collectionId, 'journals', this.title]);
-          }
-        }
-        );
-      }
-    }
 
-    
-    // Navigate back to the journal list (replace 'journals' with your actual route)
-  }
-  
-  navigateBack(){
+  navigateBack() {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    // Navigate back to the journal list (replace 'journals' with your actual route)
     this.router.navigate(['/collections', collectionId, 'journals', this.title]);
   }
-
-  logout(){
-    this.authService.logout();
-  }
 }
-

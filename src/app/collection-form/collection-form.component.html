@@ -1,40 +1,39 @@
-<!-- collection-form.component.html -->
-<mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened="true">
-        <div class=" logo">
-            <!-- Your logo or app name goes here -->
-            <a routerLink="/collections">SoulSnap</a>
+<div class="page-container">
+    <div class="page-header">
+        <button mat-icon-button routerLink="/collections" class="back-btn"
+            matTooltip="Back to Collections"><mat-icon>arrow_back</mat-icon></button>
+        <h2>{{ isEditing ? 'Edit Collection' : 'New Collection' }}</h2>
+    </div>
+    <div class="form-card glassmorphism">
+        <div class="form-header">
+            <mat-icon class="form-icon">folder_special</mat-icon>
+            <p class="form-subtitle">{{ isEditing ? 'Update your dimension vault' : 'Open a new dimension vault for your
+                thoughts' }}</p>
         </div>
-        <ul class="navigation">
-            <li class="collection">
-                <a routerLink=" /Collections" mat-list-item routerLink="" routerLinkActive=" active">Collections</a>
-            </li>
-            <li routerLink="/about">
-                <a mat-list-item routerLinkActive="active">About Us</a>
-            </li>
-            <!-- <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li> -->
-            <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
-                out</button>
-        </ul>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="collection-form">
-            <div class="header">
-                <mat-icon routerLink="/collections">arrow_back_ios</mat-icon>
-                <h2>{{ collection.id !== '' ? collection.name : this.title }}</h2>
+        <form [formGroup]="collectionForm" (ngSubmit)="onSubmit()" class="cosmic-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Collection Name</mat-label>
+                <input matInput formControlName="name" placeholder="e.g., Quantum Physics Notes">
+                <mat-icon matPrefix>label</mat-icon>
+                <mat-hint align="end">{{ collectionForm.get('name')?.value?.length || 0 }}/50</mat-hint>
+                <mat-error *ngIf="collectionForm.get('name')?.hasError('required')">Name is required</mat-error>
+                <mat-error *ngIf="collectionForm.get('name')?.hasError('maxlength')">Max 50 characters</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description"
+                    placeholder="What kind of thoughts will you store here?" rows="5"></textarea>
+                <mat-icon matPrefix>notes</mat-icon>
+                <mat-error *ngIf="collectionForm.get('description')?.hasError('required')">Description is
+                    required</mat-error>
+            </mat-form-field>
+            <div class="form-actions">
+                <button mat-flat-button type="submit" class="submit-btn" [disabled]="collectionForm.invalid">
+                    <mat-icon>{{ isEditing ? 'save' : 'add_circle' }}</mat-icon><span>{{ isEditing ? 'Update Collection'
+                        : 'Create Collection' }}</span>
+                </button>
+                <button mat-button type="button" class="cancel-btn" routerLink="/collections">Cancel</button>
             </div>
-            <form (ngSubmit)="onSubmit()">
-                <input #firstInputField placeholder="Collection title" type="text" id="name" name="name"
-                    [(ngModel)]="collection.name" required>
-
-                <textarea placeholder="Collection description" id=" description" name="description"
-                    [(ngModel)]="collection.description" required></textarea>
-
-                <button type="submit">{{ isEditing ? 'Update Collection' : 'Create Collection' }}</button>
-            </form>
-        </div>
-    </mat-sidenav-content>
-
-</mat-sidenav-container>
+        </form>
+    </div>
+</div>

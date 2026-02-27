@@ -1,63 +1,46 @@
-<!-- collection-form.component.html -->
-<mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened="true">
-        <div class=" logo">
-            <!-- Your logo or app name goes here -->
-            <a routerLink="/collections">SoulSnap</a>
-        </div>
-        <ul class="navigation">
-            <li routerLink="/collections">
-                <a mat-list-item routerLinkActive=" active">Collections</a>
-            </li>
-            <li routerLink="/about" class="about-title">
-                <a mat-list-item routerLinkActive="active">About Us</a>
-            </li>
-            <!-- <li>
-                <a mat-list-item routerLink="" routerLinkActive="active">Contact Us</a>
-            </li> -->
-            <button class="logout" mat-list-item routerLink="" routerLinkActive="active" (click)="logout()">Log
-                out</button>
-        </ul>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <section class="about-us">
-            <div class="about-container">
-                <h2 class="title">About SoulSnap</h2>
-                <p class="welcome"><i>Hey there, Soulsnap! It's your dimension for sorting out your thoughts and
-                        scribbles! This web app, Soulsnap, it's where you stash all those crazy ideas and musings, you
-                        know?
-                        You can even create these cool collections to tidy up your journals and notes. It's like, bam!
-                        Organization right at your fingertips, baby!</i>
+<div class="page-container">
+    <section class="about-hero">
+        <div class="hero-glow"></div>
+        <h1 class="hero-title">About <span class="neon-text-green">SoulSnap</span></h1>
+        <p class="hero-subtitle">A Thought Dimension</p>
+    </section>
+    <section class="about-section">
+        <mat-card class="about-card">
+            <mat-card-content>
+                <img src="/assets/logo.png" alt="SoulSnap" class="section-logo">
+                <p class="about-text">
+                    Hey there, Soulsnapper! Welcome to your personal dimension for sorting out thoughts and scribbles.
+                    SoulSnap is where you stash all those crazy ideas and musings—you can create collections to organize
+                    your journals and notes. It's like, <em>bam!</em> Organization right at your fingertips, baby!
                 </p>
-
-                <h2>Meet the Creator</h2>
-                <img src="" />
-                <div class="team-member">
-                    <div class="member-info">
-                        <div class="avatar">
-                            <img src="https://i.pinimg.com/originals/94/76/24/947624e9216145ae503d6aeede82531c.jpg" />
-                        </div>
-                        <div class="details">
-                            <h3>Rick Sanchez</h3>
-                            <p>Sole Developer of SoulSnap</p>
-                            <ul class="social-links">
-                                <li><a href="https://github.com/shamil-b" target="_blank">GitHub</a></li>
-                                <li><a href="https://leetcode.com/shamil_b" target="_blank">LeetCode</a></li>
-                                <li><a href="https://www.linkedin.com/in/shamil-bedru-884883202"
-                                        target="_blank">LinkedIn</a></li>
-                                <!-- Add more social links here -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add more team members if needed -->
-
-                <footer>
-                    <p>Contact: shamilbedru47@email.com | Phone: +251978512230</p>
-                </footer>
+            </mat-card-content>
+        </mat-card>
+    </section>
+    <section class="creator-section">
+        <h2>Meet the <span class="neon-text-blue">Creator</span></h2>
+        <div class="creator-card glassmorphism">
+            <div class="avatar-frame">
+                <img src="https://i.pinimg.com/originals/94/76/24/947624e9216145ae503d6aeede82531c.jpg"
+                    alt="Rick Sanchez" />
+                <div class="avatar-glow"></div>
             </div>
-        </section>
-    </mat-sidenav-content>
-
-</mat-sidenav-container>
+            <div class="creator-info">
+                <h3>Rick Sanchez</h3>
+                <p class="creator-role">Sole Developer of SoulSnap</p>
+                <p class="creator-quote">"I turned myself into a full-stack developer, Morty!"</p>
+                <div class="social-links">
+                    <a href="https://github.com/shamil-b" target="_blank" mat-flat-button
+                        class="social-btn github"><mat-icon>code</mat-icon>GitHub</a>
+                    <a href="https://leetcode.com/shamil_b" target="_blank" mat-flat-button
+                        class="social-btn leetcode"><mat-icon>terminal</mat-icon>LeetCode</a>
+                    <a href="https://www.linkedin.com/in/shamil-bedru-884883202" target="_blank" mat-flat-button
+                        class="social-btn linkedin"><mat-icon>work</mat-icon>LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="about-footer">
+        <p><mat-icon>mail_outline</mat-icon>shamilbedru47@email.com</p>
+        <p><mat-icon>phone</mat-icon>+251978512230</p>
+    </footer>
+</div>

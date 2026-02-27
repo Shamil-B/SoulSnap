@@ -1,73 +1,129 @@
-// journal-list.component.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { JournalService } from '../services/journal.service'; // Import your journal service
-import { Journal } from '../interfaces/journal'; // Import the JournalEntry ince
+import { FormControl } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { JournalService } from '../services/journal.service';
+import { Journal } from '../interfaces/journal';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
 import { AuthService } from '../services/auth.service';
+
+const MOOD_MAP: Record<string, { emoji: string; label: string }> = {
+  energized: { emoji: '🔥', label: 'Energized' },
+  calm: { emoji: '😌', label: 'Calm' },
+  inspired: { emoji: '💡', label: 'Inspired' },
+  frustrated: { emoji: '😤', label: 'Frustrated' },
+  reflective: { emoji: '🌙', label: 'Reflective' },
+};
 
 @Component({
   selector: 'app-journal-list',
   templateUrl: './journal-list.component.html',
   styleUrls: ['./journal-list.component.scss'],
+  animations: [
+    trigger('cardAnim', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(16px) scale(0.97)' }),
+        animate('350ms ease-out', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('250ms ease-in', style({ opacity: 0, transform: 'scale(0.95)' }))
+      ])
+    ])
+  ]
 })
-export class JournalListComponent implements OnInit {
+export class JournalListComponent implements OnInit, OnDestroy {
   journals: Journal[] = [];
-  collection? : Collection;
-  isLoading : boolean = false;
+  filteredJournals: Journal[] = [];
+  pagedJournals: Journal[] = [];
+  collection?: Collection;
+  isLoading = false;
   title = '';
-  constructor(private journalService: JournalService, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService : AuthService) {}
-  
+
+  searchControl = new FormControl('');
+  sortMode: 'newest' | 'oldest' | 'name' = 'newest';
+
+  pageSize = 6;
+  pageIndex = 0;
+  totalItems = 0;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private journalService: JournalService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private collectionService: CollectionService,
+    private authService: AuthService
+  ) { }
+
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') ?? '';
-    if(this.authService.isLoggedIn()){
-      // we will refresh the page
-      this.loadJournals();
-    }
-    else{
-      this.router.navigate(['/login']);
-    }
+    if (this.authService.isLoggedIn()) { this.loadJournals(); } else { this.router.navigate(['/login']); }
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$)
+    ).subscribe(() => this.applyFilterAndSort());
   }
+
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
+
   loadJournals() {
     this.isLoading = true;
-    let collectionId  = this.route.snapshot.paramMap.get('collectionId');
-    if(collectionId){
-      this.collectionService.getCollectionById(collectionId).forEach((collection) => {
+    const collectionId = this.route.snapshot.paramMap.get('collectionId');
+    if (collectionId) {
+      this.collectionService.getCollectionById(collectionId).pipe(takeUntil(this.destroy$)).forEach((collection) => {
         if (collection) {
           this.collection = collection;
           this.journals = this.journalService.getJournals(this.collection);
+          this.applyFilterAndSort();
           this.isLoading = false;
         }
-      }
-      ).catch(error => {
-        console.log(error);
-        this.isLoading = false;
-      });
+      }).catch(error => { console.log(error); this.isLoading = false; });
     }
   }
 
-  navigateToJournal(journalId: string) {
-    // Navigate to the details of the selected journal entry
-    const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    this.router.navigate(['/collections', collectionId, 'journals', journalId]);
+  applyFilterAndSort() {
+    let result = [...this.journals];
+    const query = (this.searchControl.value || '').toLowerCase().trim();
+    if (query) {
+      result = result.filter(j =>
+        j.title.toLowerCase().includes(query) ||
+        (j.content && j.content.toLowerCase().includes(query))
+      );
+    }
+    switch (this.sortMode) {
+      case 'name': result.sort((a, b) => a.title.localeCompare(b.title)); break;
+      case 'newest': result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); break;
+      case 'oldest': result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); break;
+    }
+    this.filteredJournals = result;
+    this.totalItems = result.length;
+    this.pageIndex = 0;
+    this.updatePage();
   }
 
-  navigateToCreateJournal(){
-    // Navigate to the create journal page
-    this.router.navigate(['create-journal', this.collection?.id,"0",this.title]);
+  onSortChange(mode: string) { this.sortMode = mode as any; this.applyFilterAndSort(); }
+
+  onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.updatePage();
   }
+
+  private updatePage() {
+    const start = this.pageIndex * this.pageSize;
+    this.pagedJournals = this.filteredJournals.slice(start, start + this.pageSize);
+  }
+
+  getMood(mood?: string) { return mood ? MOOD_MAP[mood] : null; }
 
   editJournal(journalId: string) {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
-    if (collectionId && journalId) {
-      // Navigate to the edit page (replace 'edit-journal' with your actual route)
-      this.router.navigate(['create-journal', collectionId, journalId, this.title]);
-    }
+    if (collectionId && journalId) { this.router.navigate(['create-journal', collectionId, journalId, this.title]); }
   }
 
-  logout(){
-    this.authService.logout();
-  }
+  navigateToCreateJournal() { this.router.navigate(['create-journal', this.collection?.id, '0', this.title]); }
 }

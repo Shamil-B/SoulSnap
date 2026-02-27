@@ -1,51 +1,32 @@
-import { Component } from '@angular/core';
-import { User } from '../interfaces/user';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
-@Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
-})
-export class RegisterComponent {
+@Component({ selector: 'app-register', templateUrl: './register.component.html', styleUrls: ['./register.component.scss'] })
+export class RegisterComponent implements OnInit {
+  registerForm: FormGroup;
+  errorMessage = '';
+  isLoading = false;
+  hidePassword = true;
 
-  constructor(private authService : AuthService, private router : Router){}
-
-  ngOnInit(): void {
-    if(this.authService.isLoggedIn()){
-      this.router.navigate(['/collections']);
-    }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
-  user : User = {
-    email:'',
-    password:''
-  }
+  ngOnInit(): void { if (this.authService.isLoggedIn()) this.router.navigate(['/collections']); }
 
-  errorMessage : string = "";
-  isLoading : boolean = false;
-  // Add register logic here
-
-  register(){
-    // simple validation
-    if(this.user.email == "" || this.user.password == ""){
-      this.errorMessage = "Please enter email and password";
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    this.authService.register(this.user).then((res)=>{
+  register(): void {
+    if (this.registerForm.invalid) { this.registerForm.markAllAsTouched(); return; }
+    this.isLoading = true; this.errorMessage = '';
+    const { email, password } = this.registerForm.value;
+    this.authService.register({ email, password }).then((res) => {
       this.isLoading = false;
-      if(res === 'success'){
-        this.errorMessage = "";
-        this.router.navigate(['/collections']);
-      }
-      else{
-        this.errorMessage = res;
-      }
+      if (res === 'success') { this.router.navigate(['/collections']); }
+      else { this.errorMessage = res; }
     });
   }
 }
