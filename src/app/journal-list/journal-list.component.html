@@ -53,8 +53,16 @@
             <mat-card-content>
                 <div class="card-header-row">
                     <mat-icon class="card-icon">description</mat-icon>
-                    <span class="mood-chip" *ngIf="getMood(journal.mood)">{{ getMood(journal.mood)!.emoji }} {{
-                        getMood(journal.mood)!.label }}</span>
+                    <div class="moods-container" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                        <span class="mood-chip" *ngIf="getMood(journal.mood)"
+                            [matTooltip]="'Main: ' + getMood(journal.mood)!.label">
+                            {{ getMood(journal.mood)!.emoji }} {{ getMood(journal.mood)!.label }}
+                        </span>
+                        <span class="mood-chip secondary-mood" *ngFor="let m of journal.additionalMoods"
+                            [matTooltip]="getMood(m)?.label || ''" style="padding: 4px 8px;">
+                            {{ getMood(m)?.emoji }}
+                        </span>
+                    </div>
                 </div>
                 <h3 class="card-title">{{ journal.title }}</h3>
                 <p class="card-description">{{ journal.content || 'An empty thought...' }}</p>

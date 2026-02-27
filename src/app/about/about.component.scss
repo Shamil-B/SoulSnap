@@ -225,6 +225,17 @@
       transform: translateY(-2px);
     }
   }
+
+  &.email {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-subtle) !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      transform: translateY(-2px);
+    }
+  }
 }
 
 .about-footer {

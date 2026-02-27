@@ -5,5 +5,6 @@ export interface Journal {
   content: string;
   date: Date;
   collectionId: string;
-  mood?: string; // Optional mood tag: 'energized' | 'calm' | 'inspired' | 'frustrated' | 'reflective'
+  mood?: string; // Optional mood tag
+  additionalMoods?: string[];
 }

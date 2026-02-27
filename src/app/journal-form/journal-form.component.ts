@@ -15,6 +15,31 @@ const MOODS = [
   { value: 'inspired', emoji: '💡', label: 'Inspired' },
   { value: 'frustrated', emoji: '😤', label: 'Frustrated' },
   { value: 'reflective', emoji: '🌙', label: 'Reflective' },
+  { value: 'happy', emoji: '😊', label: 'Happy' },
+  { value: 'sad', emoji: '😢', label: 'Sad' },
+  { value: 'angry', emoji: '😠', label: 'Angry' },
+  { value: 'anxious', emoji: '😰', label: 'Anxious' },
+  { value: 'excited', emoji: '🤩', label: 'Excited' },
+  { value: 'tired', emoji: '😴', label: 'Tired' },
+  { value: 'sick', emoji: '🤒', label: 'Sick' },
+  { value: 'creative', emoji: '🎨', label: 'Creative' },
+  { value: 'nostalgic', emoji: '📼', label: 'Nostalgic' },
+  { value: 'grateful', emoji: '🙏', label: 'Grateful' },
+  { value: 'loved', emoji: '🥰', label: 'Loved' },
+  { value: 'confident', emoji: '😎', label: 'Confident' },
+  { value: 'curious', emoji: '🧐', label: 'Curious' },
+  { value: 'overwhelmed', emoji: '🤯', label: 'Overwhelmed' },
+  { value: 'relaxed', emoji: '🛋️', label: 'Relaxed' },
+  { value: 'focused', emoji: '🎯', label: 'Focused' },
+  { value: 'confused', emoji: '😵‍💫', label: 'Confused' },
+  { value: 'adventurous', emoji: '🌍', label: 'Adventurous' },
+  { value: 'romantic', emoji: '🌹', label: 'Romantic' },
+  { value: 'silly', emoji: '🤪', label: 'Silly' },
+  { value: 'lonely', emoji: '🥀', label: 'Lonely' },
+  { value: 'proud', emoji: '🏆', label: 'Proud' },
+  { value: 'bored', emoji: '🥱', label: 'Bored' },
+  { value: 'hopeful', emoji: '🌈', label: 'Hopeful' },
+  { value: 'jealous', emoji: '😒', label: 'Jealous' }
 ];
 
 @Component({ selector: 'app-journal-form', templateUrl: './journal-form.component.html', styleUrls: ['./journal-form.component.scss'] })
@@ -38,7 +63,8 @@ export class JournalFormComponent implements OnInit {
     this.journalForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
       content: ['', [Validators.required]],
-      mood: ['']
+      mood: [''],
+      additionalMoods: [[]]
     });
   }
 
@@ -57,7 +83,12 @@ export class JournalFormComponent implements OnInit {
           const existingJournal = this.journalService.getJournalById(collection, journalId);
           if (existingJournal) {
             this.isEditing = true;
-            this.journalForm.patchValue({ title: existingJournal.title, content: existingJournal.content, mood: existingJournal.mood || '' });
+            this.journalForm.patchValue({
+              title: existingJournal.title,
+              content: existingJournal.content,
+              mood: existingJournal.mood || '',
+              additionalMoods: existingJournal.additionalMoods || []
+            });
           }
           this.isLoading = false;
         }
@@ -95,7 +126,7 @@ export class JournalFormComponent implements OnInit {
     if (this.isEditing) {
       this.collectionService.getCollectionById(collectionId).forEach((collection) => {
         if (collection) {
-          const journal: Journal = { id: this.journalId, title: formValue.title, content: formValue.content, date: new Date(), collectionId, mood: formValue.mood || undefined };
+          const journal: Journal = { id: this.journalId, title: formValue.title, content: formValue.content, date: new Date(), collectionId, mood: formValue.mood || undefined, additionalMoods: formValue.additionalMoods || [] };
           this.journalService.updateJournal(collection, journal);
           this.router.navigate(['/collections', collectionId, 'journals', this.title]);
         }
@@ -104,7 +135,7 @@ export class JournalFormComponent implements OnInit {
       const newId = generateUniqueId();
       this.collectionService.getCollectionById(collectionId).forEach((collection) => {
         if (collection) {
-          const journal: Journal = { id: newId, title: formValue.title, content: formValue.content, date: new Date(), collectionId: collection.id, mood: formValue.mood || undefined };
+          const journal: Journal = { id: newId, title: formValue.title, content: formValue.content, date: new Date(), collectionId: collection.id, mood: formValue.mood || undefined, additionalMoods: formValue.additionalMoods || [] };
           this.journalService.addJournal(collection, journal);
           this.router.navigate(['/collections', collectionId, 'journals', this.title]);
         }
@@ -115,5 +146,51 @@ export class JournalFormComponent implements OnInit {
   navigateBack() {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');
     this.router.navigate(['/collections', collectionId, 'journals', this.title]);
+  }
+
+  isMoodSelected(moodValue: string): boolean {
+    const mainMood = this.journalForm.get('mood')?.value;
+    const additional = this.journalForm.get('additionalMoods')?.value || [];
+    return mainMood === moodValue || additional.includes(moodValue);
+  }
+
+  toggleMood(moodValue: string) {
+    const mainMood = this.journalForm.get('mood')?.value;
+    const additional: string[] = this.journalForm.get('additionalMoods')?.value || [];
+
+    if (this.isMoodSelected(moodValue)) {
+      if (mainMood === moodValue) {
+        this.journalForm.get('mood')?.setValue('');
+        if (additional.length > 0) {
+          this.journalForm.get('mood')?.setValue(additional[0]);
+          this.journalForm.get('additionalMoods')?.setValue(additional.slice(1));
+        }
+      } else {
+        this.journalForm.get('additionalMoods')?.setValue(additional.filter((m: string) => m !== moodValue));
+      }
+    } else {
+      if (!mainMood) {
+        this.journalForm.get('mood')?.setValue(moodValue);
+      } else {
+        this.journalForm.get('additionalMoods')?.setValue([...additional, moodValue]);
+      }
+    }
+  }
+
+  setMainMood(moodValue: string, event: Event) {
+    event.stopPropagation();
+    const mainMood = this.journalForm.get('mood')?.value;
+    const additional: string[] = this.journalForm.get('additionalMoods')?.value || [];
+
+    if (mainMood === moodValue) return;
+
+    let newAdditional = [...additional];
+    if (mainMood) {
+      newAdditional.push(mainMood);
+    }
+    newAdditional = newAdditional.filter(m => m !== moodValue);
+
+    this.journalForm.get('mood')?.setValue(moodValue);
+    this.journalForm.get('additionalMoods')?.setValue(newAdditional);
   }
 }
