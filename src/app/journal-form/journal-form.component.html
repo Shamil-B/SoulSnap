@@ -32,13 +32,21 @@
 
             <!-- Mood Selector -->
             <div class="mood-selector">
-                <label class="mood-label">How are you feeling?</label>
+                <label class="mood-label">How are you feeling? <span class="mood-hint">(Select multiple, click star for
+                        main)</span></label>
                 <div class="mood-options">
                     <button *ngFor="let mood of moods" type="button" class="mood-btn"
-                        [class.mood-selected]="journalForm.get('mood')?.value === mood.value"
-                        (click)="journalForm.get('mood')?.setValue(journalForm.get('mood')?.value === mood.value ? '' : mood.value)">
+                        [class.mood-selected]="isMoodSelected(mood.value)"
+                        [class.mood-main]="journalForm.get('mood')?.value === mood.value"
+                        (click)="toggleMood(mood.value)">
                         <span class="mood-emoji">{{ mood.emoji }}</span>
                         <span class="mood-text">{{ mood.label }}</span>
+                        <mat-icon *ngIf="isMoodSelected(mood.value)" class="main-mood-star"
+                            (click)="setMainMood(mood.value, $event)"
+                            [class.active-star]="journalForm.get('mood')?.value === mood.value"
+                            [matTooltip]="journalForm.get('mood')?.value === mood.value ? 'Main mood' : 'Set as main mood'">
+                            star
+                        </mat-icon>
                     </button>
                 </div>
             </div>

@@ -121,6 +121,13 @@
     font-weight: 500;
     color: var(--text-secondary);
     margin-bottom: var(--space-md);
+
+    .mood-hint {
+      font-size: 0.8rem;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-left: 8px;
+    }
   }
 }
 
@@ -159,6 +166,34 @@
     border-color: rgba(168, 85, 247, 0.35);
     color: var(--neon-purple);
     box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+  }
+
+  &.mood-main {
+    border-color: var(--neon-blue);
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+  }
+
+  .main-mood-star {
+    font-size: 1.1rem;
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+      color: #ffd700;
+      transform: scale(1.2);
+    }
+
+    &.active-star {
+      opacity: 1;
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    }
   }
 }
 
