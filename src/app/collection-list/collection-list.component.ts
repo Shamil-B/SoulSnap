@@ -7,7 +7,6 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
-import { AuthService } from '../services/auth.service';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -45,13 +44,11 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   constructor(
     private collectionService: CollectionService,
     private router: Router,
-    private authService: AuthService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) { this.loadCollections(); }
-    else { this.router.navigate(['/login']); }
+    this.loadCollections();
 
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
