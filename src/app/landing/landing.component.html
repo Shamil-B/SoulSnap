@@ -1,0 +1,217 @@
+<!-- ==================== FLOATING NAVBAR ==================== -->
+<nav class="landing-navbar" [class.scrolled]="navScrolled">
+    <div class="navbar-inner">
+        <div class="navbar-brand">
+            <img src="/assets/logo.png" alt="SoulSnap" class="logo-img">
+            <span class="logo-text">SoulSnap</span>
+        </div>
+        <div class="navbar-actions">
+            <button class="theme-toggle-btn" (click)="themeService.toggle()"
+                [attr.aria-label]="themeService.isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+                <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+            </button>
+            <a routerLink="/login" class="nav-signin">Sign In</a>
+            <a routerLink="/register" class="nav-cta-btn">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero">
+    <!-- Background effects -->
+    <div class="hero-bg">
+        <div class="star-field">
+            <div *ngFor="let s of [].constructor(60); let i = index"
+                 class="star"
+                 [style.left.%]="(i * 17 + i * i * 3) % 100"
+                 [style.top.%]="(i * 23 + i * 7) % 100"
+                 [style.animationDelay.s]="(i * 0.4) % 5"
+                 [style.animationDuration.s]="2 + (i % 3)">
+            </div>
+        </div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-lines"></div>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                A Thought Dimension
+            </div>
+            <h1 class="hero-headline">
+                Your Thoughts Deserve Their Own
+                <span class="gradient-text">Universe</span>
+            </h1>
+            <p class="hero-description">
+                A cosmic journal for the multiverse-minded. Capture thoughts, track moods,
+                and organize your mental dimensions — because even the most chaotic minds
+                deserve a beautiful place to exist.
+            </p>
+            <div class="hero-buttons">
+                <a routerLink="/register" class="btn-primary">
+                    <mat-icon>rocket_launch</mat-icon>
+                    Open Your Portal
+                </a>
+                <a routerLink="/login" class="btn-ghost">
+                    <mat-icon>login</mat-icon>
+                    Sign In
+                </a>
+            </div>
+            <div class="social-proof">
+                <div class="avatar-stack">
+                    <div class="avatar" *ngFor="let a of [1,2,3,4]" [style.background]="
+                        a === 1 ? 'linear-gradient(135deg, #00ff88, #00d4ff)' :
+                        a === 2 ? 'linear-gradient(135deg, #a855f7, #ff2d55)' :
+                        a === 3 ? 'linear-gradient(135deg, #00d4ff, #a855f7)' :
+                        'linear-gradient(135deg, #ff2d55, #00ff88)'
+                    ">
+                        <span>{{ ['S','M','J','A'][a-1] }}</span>
+                    </div>
+                </div>
+                <span class="proof-text">Join thoughtful minds across dimensions</span>
+            </div>
+        </div>
+
+        <div class="hero-preview">
+            <div class="preview-card glassmorphism">
+                <div class="preview-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="preview-header">
+                    <div class="preview-icon">
+                        <mat-icon>auto_stories</mat-icon>
+                    </div>
+                    <div>
+                        <div class="preview-title">Today's Reflection</div>
+                        <div class="preview-date">Dimension C-137</div>
+                    </div>
+                </div>
+                <div class="preview-body">
+                    <div class="shimmer-line w-full"></div>
+                    <div class="shimmer-line w-75"></div>
+                    <div class="shimmer-line w-60"></div>
+                </div>
+                <div class="preview-moods">
+                    <span class="mood-chip active">😌 Calm</span>
+                    <span class="mood-chip">🤔 Thoughtful</span>
+                    <span class="mood-chip">✨ Inspired</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FEATURES SECTION ==================== -->
+<section class="features-section" #observeSection data-section="features" [@fadeUp]="sectionStates['features']">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">Features</span>
+            <h2 class="section-title">Everything Your Mind <span class="gradient-text">Needs</span></h2>
+            <p class="section-subtitle">Tools designed for the cosmically curious — organize, reflect, and explore your inner multiverse.</p>
+        </div>
+        <div class="features-grid" [@staggerIn]="sectionStates['features']">
+            <div class="feature-card glassmorphism" *ngFor="let f of features" [attr.data-accent]="f.accent">
+                <div class="feature-icon-wrap" [ngClass]="'accent-' + f.accent">
+                    <mat-icon>{{ f.icon }}</mat-icon>
+                </div>
+                <h3 class="feature-title">{{ f.title }}</h3>
+                <p class="feature-desc">{{ f.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== MOOD SHOWCASE ==================== -->
+<section class="mood-section" #observeSection data-section="moods" [@fadeUp]="sectionStates['moods']">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">Mood Tracking</span>
+            <h2 class="section-title">How Are You <span class="gradient-text-purple">Feeling</span>?</h2>
+            <p class="section-subtitle">Tag every entry with your emotional state. Watch patterns emerge across your multiverse.</p>
+        </div>
+        <div class="mood-spotlight">
+            <div class="spotlight-emoji" [class.bounce]="true">
+                {{ moods[activeMoodIndex].emoji }}
+            </div>
+            <div class="spotlight-label">{{ moods[activeMoodIndex].label }}</div>
+        </div>
+        <div class="mood-grid">
+            <button
+                *ngFor="let m of moods; let i = index"
+                class="mood-pill"
+                [class.active]="i === activeMoodIndex"
+                [style.animationDelay.ms]="i * 60"
+                (mouseenter)="setActiveMood(i)"
+                (click)="setActiveMood(i)">
+                <span class="pill-emoji">{{ m.emoji }}</span>
+                <span class="pill-label">{{ m.label }}</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="steps-section" #observeSection data-section="howItWorks" [@fadeUp]="sectionStates['howItWorks']">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag">How It Works</span>
+            <h2 class="section-title">Three Steps to Your <span class="gradient-text-blue">Dimension</span></h2>
+            <p class="section-subtitle">Getting started is easier than opening a portal gun.</p>
+        </div>
+        <div class="steps-timeline" [@staggerSteps]="sectionStates['howItWorks']">
+            <div class="step-card" *ngFor="let step of steps">
+                <div class="step-number">{{ step.number }}</div>
+                <div class="step-connector"></div>
+                <div class="step-icon-wrap">
+                    <mat-icon>{{ step.icon }}</mat-icon>
+                </div>
+                <h3 class="step-title">{{ step.title }}</h3>
+                <p class="step-desc">{{ step.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FINAL CTA ==================== -->
+<section class="cta-section" #observeSection data-section="cta" [@fadeUp]="sectionStates['cta']">
+    <div class="cta-bg">
+        <div class="orb orb-cta-1"></div>
+        <div class="orb orb-cta-2"></div>
+    </div>
+    <div class="section-container">
+        <div class="cta-card glassmorphism">
+            <h2 class="cta-title">Ready to Open Your <span class="gradient-text">Portal</span>?</h2>
+            <p class="cta-desc">
+                Your thoughts are waiting to be captured. Start building your personal
+                thought dimension today — no interdimensional travel required.
+            </p>
+            <a routerLink="/register" class="btn-primary btn-lg">
+                <mat-icon>rocket_launch</mat-icon>
+                Get Started — It's Free
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="landing-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <img src="/assets/logo.png" alt="SoulSnap" class="footer-logo">
+            <span class="footer-name">SoulSnap</span>
+            <span class="footer-tagline">Your cosmic thought journal</span>
+        </div>
+        <div class="footer-links">
+            <a routerLink="/login">Sign In</a>
+            <a routerLink="/register">Get Started</a>
+        </div>
+        <div class="footer-copy">
+            &copy; {{ 2026 }} SoulSnap. Built with &#x1f9ea; in Dimension C-137
+        </div>
+    </div>
+</footer>

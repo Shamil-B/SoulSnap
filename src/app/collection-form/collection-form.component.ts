@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
 import { generateUniqueId } from '../utilities/generate-id';
-import { AuthService } from '../services/auth.service';
-
 @Component({ selector: 'app-collection-form', templateUrl: './collection-form.component.html', styleUrls: ['./collection-form.component.scss'] })
 export class CollectionFormComponent implements OnInit {
   collectionForm: FormGroup;
@@ -13,13 +11,13 @@ export class CollectionFormComponent implements OnInit {
   title = '';
   private collectionId = '';
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private collectionService: CollectionService) {
     this.collectionForm = this.fb.group({ name: ['', [Validators.required, Validators.maxLength(50)]], description: ['', [Validators.required]] });
   }
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') || 'Create Collection';
-    if (this.authService.isLoggedIn()) { this.checkEditMode(); } else { this.router.navigate(['/login']); }
+    this.checkEditMode();
   }
 
   checkEditMode() {

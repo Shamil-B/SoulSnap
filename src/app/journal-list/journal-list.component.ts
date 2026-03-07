@@ -8,40 +8,7 @@ import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
 import { CollectionService } from '../services/collection.service';
 import { Collection } from '../interfaces/collections';
-import { AuthService } from '../services/auth.service';
-
-const MOOD_MAP: Record<string, { emoji: string; label: string }> = {
-  energized: { emoji: '🔥', label: 'Energized' },
-  calm: { emoji: '😌', label: 'Calm' },
-  inspired: { emoji: '💡', label: 'Inspired' },
-  frustrated: { emoji: '😤', label: 'Frustrated' },
-  reflective: { emoji: '🌙', label: 'Reflective' },
-  happy: { emoji: '😊', label: 'Happy' },
-  sad: { emoji: '😢', label: 'Sad' },
-  angry: { emoji: '😠', label: 'Angry' },
-  anxious: { emoji: '😰', label: 'Anxious' },
-  excited: { emoji: '🤩', label: 'Excited' },
-  tired: { emoji: '😴', label: 'Tired' },
-  sick: { emoji: '🤒', label: 'Sick' },
-  creative: { emoji: '🎨', label: 'Creative' },
-  nostalgic: { emoji: '📼', label: 'Nostalgic' },
-  grateful: { emoji: '🙏', label: 'Grateful' },
-  loved: { emoji: '🥰', label: 'Loved' },
-  confident: { emoji: '😎', label: 'Confident' },
-  curious: { emoji: '🧐', label: 'Curious' },
-  overwhelmed: { emoji: '🤯', label: 'Overwhelmed' },
-  relaxed: { emoji: '🛋️', label: 'Relaxed' },
-  focused: { emoji: '🎯', label: 'Focused' },
-  confused: { emoji: '😵‍💫', label: 'Confused' },
-  adventurous: { emoji: '🌍', label: 'Adventurous' },
-  romantic: { emoji: '🌹', label: 'Romantic' },
-  silly: { emoji: '🤪', label: 'Silly' },
-  lonely: { emoji: '🥀', label: 'Lonely' },
-  proud: { emoji: '🏆', label: 'Proud' },
-  bored: { emoji: '🥱', label: 'Bored' },
-  hopeful: { emoji: '🌈', label: 'Hopeful' },
-  jealous: { emoji: '😒', label: 'Jealous' }
-};
+import { getMoodInfo } from '../shared/mood-data';
 
 @Component({
   selector: 'app-journal-list',
@@ -70,6 +37,9 @@ export class JournalListComponent implements OnInit, OnDestroy {
   searchControl = new FormControl('');
   sortMode: 'newest' | 'oldest' | 'name' = 'newest';
 
+  availableMoods: { key: string; emoji: string; label: string }[] = [];
+  selectedMoodFilters = new Set<string>();
+
   pageSize = 6;
   pageIndex = 0;
   totalItems = 0;
@@ -80,13 +50,12 @@ export class JournalListComponent implements OnInit, OnDestroy {
     private journalService: JournalService,
     private route: ActivatedRoute,
     private router: Router,
-    private collectionService: CollectionService,
-    private authService: AuthService
+    private collectionService: CollectionService
   ) { }
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') ?? '';
-    if (this.authService.isLoggedIn()) { this.loadJournals(); } else { this.router.navigate(['/login']); }
+    this.loadJournals();
 
     this.searchControl.valueChanges.pipe(
       debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$)
@@ -103,11 +72,40 @@ export class JournalListComponent implements OnInit, OnDestroy {
         if (collection) {
           this.collection = collection;
           this.journals = this.journalService.getJournals(this.collection);
+          this.buildAvailableMoods();
           this.applyFilterAndSort();
           this.isLoading = false;
         }
       }).catch(error => { console.log(error); this.isLoading = false; });
     }
+  }
+
+  buildAvailableMoods() {
+    const moodKeys = new Set<string>();
+    for (const j of this.journals) {
+      if (j.mood) moodKeys.add(j.mood);
+      if (j.additionalMoods) j.additionalMoods.forEach(m => moodKeys.add(m));
+    }
+    this.availableMoods = Array.from(moodKeys)
+      .map(key => {
+        const info = getMoodInfo(key);
+        return info ? { key, emoji: info.emoji, label: info.label } : null;
+      })
+      .filter((m): m is { key: string; emoji: string; label: string } => m !== null);
+  }
+
+  toggleMoodFilter(key: string) {
+    if (this.selectedMoodFilters.has(key)) {
+      this.selectedMoodFilters.delete(key);
+    } else {
+      this.selectedMoodFilters.add(key);
+    }
+    this.applyFilterAndSort();
+  }
+
+  clearMoodFilters() {
+    this.selectedMoodFilters.clear();
+    this.applyFilterAndSort();
   }
 
   applyFilterAndSort() {
@@ -118,6 +116,14 @@ export class JournalListComponent implements OnInit, OnDestroy {
         j.title.toLowerCase().includes(query) ||
         (j.content && j.content.toLowerCase().includes(query))
       );
+    }
+    if (this.selectedMoodFilters.size > 0) {
+      result = result.filter(j => {
+        const journalMoods = new Set<string>();
+        if (j.mood) journalMoods.add(j.mood);
+        if (j.additionalMoods) j.additionalMoods.forEach(m => journalMoods.add(m));
+        return Array.from(this.selectedMoodFilters).some(f => journalMoods.has(f));
+      });
     }
     switch (this.sortMode) {
       case 'name': result.sort((a, b) => a.title.localeCompare(b.title)); break;
@@ -143,7 +149,7 @@ export class JournalListComponent implements OnInit, OnDestroy {
     this.pagedJournals = this.filteredJournals.slice(start, start + this.pageSize);
   }
 
-  getMood(mood?: string) { return mood ? MOOD_MAP[mood] : null; }
+  getMood(mood?: string) { return getMoodInfo(mood); }
 
   editJournal(journalId: string) {
     const collectionId = this.route.snapshot.paramMap.get('collectionId');

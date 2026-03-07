@@ -1,0 +1,84 @@
+<div class="page-container">
+    <div class="page-header">
+        <div class="header-left">
+            <mat-icon class="header-icon">search</mat-icon>
+            <div>
+                <h2>Search</h2>
+                <p class="header-subtitle">Find anything across all dimensions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Input -->
+    <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [formControl]="searchControl" placeholder="Search collections and journals...">
+    </mat-form-field>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="isLoading">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading your data...</p>
+    </div>
+
+    <!-- Initial State -->
+    <div class="empty-state" *ngIf="!isLoading && !hasSearched">
+        <div class="empty-icon">🔍</div>
+        <h3>Start Searching</h3>
+        <p>Type to search across all your collections and journals simultaneously.</p>
+    </div>
+
+    <!-- No Results -->
+    <div class="empty-state"
+        *ngIf="!isLoading && hasSearched && matchedCollections.length === 0 && matchedJournals.length === 0">
+        <div class="empty-icon">🌌</div>
+        <h3>No Results</h3>
+        <p>Nothing matched "{{ searchControl.value }}" across the multiverse. Try different keywords.</p>
+    </div>
+
+    <!-- Results -->
+    <div *ngIf="!isLoading && hasSearched && (matchedCollections.length > 0 || matchedJournals.length > 0)">
+
+        <!-- Collections Results -->
+        <div class="result-section" *ngIf="matchedCollections.length > 0">
+            <h3 class="result-section-title">
+                <mat-icon>collections_bookmark</mat-icon> Collections ({{ matchedCollections.length }})
+            </h3>
+            <div class="card-grid">
+                <div class="result-card" *ngFor="let col of matchedCollections"
+                    (click)="navigateToCollection(col)">
+                    <div class="card-header-row">
+                        <mat-icon class="card-icon">folder</mat-icon>
+                        <span class="card-meta">{{ col.journals.length || 0 }} journals</span>
+                    </div>
+                    <h4 class="card-title">{{ col.name }}</h4>
+                    <p class="card-description">{{ col.description || 'No description' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journals Results -->
+        <div class="result-section" *ngIf="matchedJournals.length > 0">
+            <h3 class="result-section-title">
+                <mat-icon>description</mat-icon> Journals ({{ matchedJournals.length }})
+            </h3>
+            <div class="card-grid">
+                <div class="result-card" *ngFor="let match of matchedJournals"
+                    (click)="navigateToJournal(match)">
+                    <div class="card-header-row">
+                        <mat-icon class="card-icon">description</mat-icon>
+                        <span class="mood-chip" *ngIf="match.moodEmoji">
+                            {{ match.moodEmoji }} {{ match.moodLabel }}
+                        </span>
+                    </div>
+                    <h4 class="card-title">{{ match.journal.title }}</h4>
+                    <p class="card-description">{{ match.journal.content || 'An empty thought...' }}</p>
+                    <div class="card-meta-row">
+                        <mat-icon class="meta-icon">folder</mat-icon>
+                        <span class="card-meta">{{ match.collectionName }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
