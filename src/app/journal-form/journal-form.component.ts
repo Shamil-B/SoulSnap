@@ -5,42 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { JournalService } from '../services/journal.service';
 import { Journal } from '../interfaces/journal';
 import { generateUniqueId } from '../utilities/generate-id';
-import { AuthService } from '../services/auth.service';
 import { CollectionService } from '../services/collection.service';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
-
-const MOODS = [
-  { value: 'energized', emoji: '🔥', label: 'Energized' },
-  { value: 'calm', emoji: '😌', label: 'Calm' },
-  { value: 'inspired', emoji: '💡', label: 'Inspired' },
-  { value: 'frustrated', emoji: '😤', label: 'Frustrated' },
-  { value: 'reflective', emoji: '🌙', label: 'Reflective' },
-  { value: 'happy', emoji: '😊', label: 'Happy' },
-  { value: 'sad', emoji: '😢', label: 'Sad' },
-  { value: 'angry', emoji: '😠', label: 'Angry' },
-  { value: 'anxious', emoji: '😰', label: 'Anxious' },
-  { value: 'excited', emoji: '🤩', label: 'Excited' },
-  { value: 'tired', emoji: '😴', label: 'Tired' },
-  { value: 'sick', emoji: '🤒', label: 'Sick' },
-  { value: 'creative', emoji: '🎨', label: 'Creative' },
-  { value: 'nostalgic', emoji: '📼', label: 'Nostalgic' },
-  { value: 'grateful', emoji: '🙏', label: 'Grateful' },
-  { value: 'loved', emoji: '🥰', label: 'Loved' },
-  { value: 'confident', emoji: '😎', label: 'Confident' },
-  { value: 'curious', emoji: '🧐', label: 'Curious' },
-  { value: 'overwhelmed', emoji: '🤯', label: 'Overwhelmed' },
-  { value: 'relaxed', emoji: '🛋️', label: 'Relaxed' },
-  { value: 'focused', emoji: '🎯', label: 'Focused' },
-  { value: 'confused', emoji: '😵‍💫', label: 'Confused' },
-  { value: 'adventurous', emoji: '🌍', label: 'Adventurous' },
-  { value: 'romantic', emoji: '🌹', label: 'Romantic' },
-  { value: 'silly', emoji: '🤪', label: 'Silly' },
-  { value: 'lonely', emoji: '🥀', label: 'Lonely' },
-  { value: 'proud', emoji: '🏆', label: 'Proud' },
-  { value: 'bored', emoji: '🥱', label: 'Bored' },
-  { value: 'hopeful', emoji: '🌈', label: 'Hopeful' },
-  { value: 'jealous', emoji: '😒', label: 'Jealous' }
-];
+import { MOODS_LIST } from '../shared/mood-data';
 
 @Component({ selector: 'app-journal-form', templateUrl: './journal-form.component.html', styleUrls: ['./journal-form.component.scss'] })
 export class JournalFormComponent implements OnInit {
@@ -48,7 +15,7 @@ export class JournalFormComponent implements OnInit {
   title = '';
   isLoading = false;
   isEditing = false;
-  moods = MOODS;
+  moods = MOODS_LIST;
   private journalId = '';
 
   constructor(
@@ -56,7 +23,6 @@ export class JournalFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private journalService: JournalService,
-    private authService: AuthService,
     private collectionService: CollectionService,
     private dialog: MatDialog
   ) {
@@ -70,7 +36,7 @@ export class JournalFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') ?? '';
-    if (this.authService.isLoggedIn()) { this.checkEditMode(); } else { this.router.navigate(['/login']); }
+    this.checkEditMode();
   }
 
   checkEditMode() {
