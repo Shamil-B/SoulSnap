@@ -78,7 +78,7 @@
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 500;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-smooth);
     border: 1px solid transparent;
     position: relative;
 
@@ -87,7 +87,7 @@
         width: 18px;
         height: 18px;
         opacity: 0.6;
-        transition: all 0.25s ease;
+        transition: all var(--transition-smooth);
     }
 
     &:hover {
@@ -135,7 +135,7 @@
     border-radius: 50%;
     color: var(--text-muted);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all var(--transition-smooth);
 
     mat-icon {
         font-size: 1.15rem;
