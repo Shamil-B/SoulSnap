@@ -35,13 +35,16 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AboutComponent } from './about/about.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { LandingComponent } from './landing/landing.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
     AppComponent, JournalListComponent, JournalFormComponent,
     CollectionListComponent, CollectionFormComponent,
     LoginComponent, RegisterComponent, AboutComponent, LayoutComponent,
-    ConfirmDialogComponent,
+    ConfirmDialogComponent, LandingComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule, AppRoutingModule, BrowserAnimationsModule,

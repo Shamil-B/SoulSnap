@@ -8,23 +8,28 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AboutComponent } from './about/about.component';
 import { LayoutComponent } from './layout/layout.component';
+import { LandingComponent } from './landing/landing.component';
+import { SearchComponent } from './search/search.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
+  { path: '', component: LandingComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'collections', pathMatch: 'full' },
       { path: 'collections', component: CollectionListComponent },
       { path: 'collections/:collectionId/journals/:title', component: JournalListComponent },
       { path: 'create-collection/:collectionId/:title', component: CollectionFormComponent },
       { path: 'create-journal/:collectionId/:journalId/:title', component: JournalFormComponent },
+      { path: 'search', component: SearchComponent },
       { path: 'about', component: AboutComponent },
     ]
   },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
