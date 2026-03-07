@@ -25,6 +25,19 @@
         </mat-button-toggle-group>
     </div>
 
+    <!-- Mood Filter Pills -->
+    <div class="mood-filter-row" *ngIf="!isLoading && availableMoods.length > 0">
+        <div class="mood-filter-pills">
+            <button *ngFor="let m of availableMoods" class="mood-filter-chip"
+                [class.mood-filter-active]="selectedMoodFilters.has(m.key)" (click)="toggleMoodFilter(m.key)">
+                {{ m.emoji }} {{ m.label }}
+            </button>
+        </div>
+        <button class="clear-filters-btn" *ngIf="selectedMoodFilters.size > 0" (click)="clearMoodFilters()">
+            <mat-icon>close</mat-icon> Clear ({{ selectedMoodFilters.size }})
+        </button>
+    </div>
+
     <!-- Loading -->
     <div class="loading-state" *ngIf="isLoading"><mat-spinner diameter="48"></mat-spinner>
         <p>Tuning into this dimension...</p>
@@ -43,7 +56,9 @@
     <div class="empty-state" *ngIf="!isLoading && journals.length > 0 && filteredJournals.length === 0">
         <div class="empty-icon">🔍</div>
         <h3>Nothing Found</h3>
-        <p>No journals match "{{ searchControl.value }}". Try a different search.</p>
+        <p *ngIf="selectedMoodFilters.size > 0 && !searchControl.value">No journals match the selected mood filters. Try different moods or clear filters.</p>
+        <p *ngIf="selectedMoodFilters.size === 0">No journals match "{{ searchControl.value }}". Try a different search.</p>
+        <p *ngIf="selectedMoodFilters.size > 0 && searchControl.value">No journals match "{{ searchControl.value }}" with the selected moods. Try adjusting your filters.</p>
     </div>
 
     <!-- Card Grid -->
